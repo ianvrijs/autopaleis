@@ -8,7 +8,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     AppConstants.loginRoute: (context) => const LoginScreen(),
-    AppConstants.homeRoute: (context) => const HomeScreen(),
+    AppConstants.homeRoute: (context) => const Home(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -16,7 +16,7 @@ class AppRoutes {
       case AppConstants.loginRoute:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case AppConstants.homeRoute:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const Home());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
