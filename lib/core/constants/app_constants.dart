@@ -10,7 +10,7 @@ class AppConstants {
   static const String loginRoute = '/login';
 
   // Validation
-  static const int minPasswordLength = 6;
+  static const int minPasswordLength = 4;
   static const int maxUsernameLength = 50;
 
   // UI Constants
