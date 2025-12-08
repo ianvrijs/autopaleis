@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/constants/app_constants.dart';
 import '../features/home/home_screen.dart';
 import '../features/login/login_screen.dart';
+import '../features/reviews/my_reviews.dart';
 
 class AppRoutes {
   static const String initial = AppConstants.loginRoute;
@@ -9,6 +10,7 @@ class AppRoutes {
   static Map<String, WidgetBuilder> routes = {
     AppConstants.loginRoute: (context) => const LoginScreen(),
     AppConstants.homeRoute: (context) => const Home(),
+    AppConstants.myReviewsRoute: (context) => const MyReviewsPage(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -17,6 +19,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case AppConstants.homeRoute:
         return MaterialPageRoute(builder: (_) => const Home());
+      case AppConstants.myReviewsRoute:
+        return MaterialPageRoute(builder: (_) => const MyReviewsPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

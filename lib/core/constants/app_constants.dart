@@ -8,6 +8,7 @@ class AppConstants {
   // Navigation
   static const String homeRoute = '/home';
   static const String loginRoute = '/login';
+  static const String myReviewsRoute = '/my_reviews';
 
   // Validation
   static const int minPasswordLength = 4;
