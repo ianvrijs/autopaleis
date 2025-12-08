@@ -3,6 +3,7 @@ import '../core/constants/app_constants.dart';
 import '../features/home/home_screen.dart';
 import '../features/login/login_screen.dart';
 import '../features/reviews/my_reviews.dart';
+import '../features/rentals/my_rentals.dart';
 
 class AppRoutes {
   static const String initial = AppConstants.loginRoute;
@@ -11,6 +12,7 @@ class AppRoutes {
     AppConstants.loginRoute: (context) => const LoginScreen(),
     AppConstants.homeRoute: (context) => const Home(),
     AppConstants.myReviewsRoute: (context) => const MyReviewsPage(),
+    AppConstants.myRentalsRoute: (context) => const MyRentalsPage(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -21,6 +23,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Home());
       case AppConstants.myReviewsRoute:
         return MaterialPageRoute(builder: (_) => const MyReviewsPage());
+      case AppConstants.myRentalsRoute:
+        return MaterialPageRoute(builder: (_) => const MyRentalsPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
