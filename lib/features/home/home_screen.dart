@@ -34,6 +34,13 @@ class _HomeState extends State<Home> {
               Navigator.pushReplacementNamed(context, AppConstants.loginRoute);
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.star),
+            tooltip: "My Reviews",
+            onPressed: () {
+              Navigator.pushNamed(context, AppConstants.myReviewsRoute);
+            },
+          ),
         ],
       ),
       body: Padding(
