@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'app.dart';
 import 'shared/services/car_service.dart';
 import 'shared/services/auth_service.dart';
+import 'shared/services/rental_service.dart';
 
 void main() {
   runApp(
@@ -10,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => CarService()),
+        ChangeNotifierProvider(create: (_) => RentalService()),
       ],
       child: const MyApp(),
     ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../shared/services/auth_service.dart';
 import '../../shared/services/car_service.dart';
+import '../../shared/services/rental_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       final authService = context.read<AuthService>();
       final carService = context.read<CarService>();
+      final rentalService = context.read<RentalService>();
       
       final success = await authService.login(
         _usernameController.text,
@@ -37,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {        
         if (success) {
           carService.setAuthToken(authService.token!);
-          
+          rentalService.setAuthToken(authService.token!);
           // Pushed home bovenop de screens stack. Dus als je op terug klikt ga je terug naar login
           Navigator.pushNamed(context, AppConstants.homeRoute);
 
