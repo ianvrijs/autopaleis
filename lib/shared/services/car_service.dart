@@ -9,22 +9,37 @@ class CarService with ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   String? _authToken;
+  int _currentPage = 0;
+  bool _hasMoreData = true;
+  final int _pageSize = 20;
 
   List<CarModel> get carList => _carList;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  bool get hasMoreData => _hasMoreData;
 
   void setAuthToken(String token) {
     _authToken = token;
     notifyListeners();
   }
 
-  Future<void> fetchCars() async {
+  Future<void> fetchCars({bool refresh = false}) async {
+    if (refresh) {
+      _currentPage = 0;
+      _carList = [];
+      _hasMoreData = true;
+      _error = null;
+    }
+
+    if (_isLoading || !_hasMoreData) return;
+
     _isLoading = true;
     notifyListeners();
 
     try {
-      var url = Uri.parse('http://localhost:8080/api/cars');
+      var url = Uri.parse(
+        'http://localhost:8080/api/cars?page=$_currentPage&size=$_pageSize'
+      );
       
       final response = await http.get(
         url,
@@ -34,7 +49,15 @@ class CarService with ChangeNotifier {
       );
       
       if (response.statusCode == 200) {
-        _carList = parse(response.body);
+        final newCars = parse(response.body);
+        
+        if (newCars.isEmpty || newCars.length < _pageSize) {
+          _hasMoreData = false;
+        }
+        
+        _carList.addAll(newCars);
+        _currentPage++;
+        _error = null;
       } else {
         _error = 'Failed to fetch cars: ${response.statusCode}';
       }

@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   String _searchText = "";
   final Set<BodyType> _selectedBodyTypes = {};
   final Set<FuelType> _selectedFuelTypes = {};
@@ -23,15 +24,28 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
+    _scrollController.addListener(_onScroll);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CarService>().fetchCars();
+      context.read<CarService>().fetchCars(refresh: true);
     });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= 
+        _scrollController.position.maxScrollExtent - 200) {
+      final carService = context.read<CarService>();
+      if (!carService.isLoading && carService.hasMoreData) {
+        carService.fetchCars();
+      }
+    }
   }
 
   List<CarModel> _filterCars(List<CarModel> cars) {
@@ -146,9 +160,17 @@ class _HomeState extends State<Home> {
                   }
 
                   return ListView.separated(
-                    itemCount: filteredCars.length,
+                    controller: _scrollController,
+                    itemCount: filteredCars.length + (carService.hasMoreData && carService.isLoading && filteredCars.isNotEmpty ? 1 : 0),
                     separatorBuilder: (context, index) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
+                      if (index == filteredCars.length) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                      
                       final car = filteredCars[index];
                       return _buildRentalCarCard(
                         context,
