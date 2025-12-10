@@ -48,6 +48,13 @@ class _HomeState extends State<Home> {
               Navigator.pushNamed(context, AppConstants.myRentalsRoute);
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            tooltip: "Profiel",
+            onPressed: () {
+              Navigator.pushNamed(context, AppConstants.profileRoute);
+            },
+          ),
         ],
       ),
       body: Padding(
@@ -89,7 +96,25 @@ class _HomeState extends State<Home> {
                         distance: '2.5 km', // Calculate from lat/long
                         price: '€${car.price}/day',
                         onTap: () {
-                          // Navigate to car details
+                          Navigator.pushNamed(
+                            context,
+                            AppConstants.carDetailsRoute,
+                            arguments: {
+                              'id': car.id,
+                              'brand': car.brand,
+                              'model': car.model,
+                              'picture': car.picture,
+                              'price': car.price,
+                              'body': car.body.name,
+                              'year': car.modelYear,
+                              'options': car.options,
+                              'fuelType': car.fuel.name,
+                              'seats': car.nrOfSeats,
+                              'engineSize': car.engineSize.toString(),
+                              'licensePlate': car.licensePlate,
+                              'since': car.since,
+                            },
+                          );
                         },
                       );
                     },

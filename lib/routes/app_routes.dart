@@ -1,9 +1,13 @@
+import 'package:autopaleis/features/userInfo/userInfo.dart';
+import 'package:autopaleis/features/userInfo/edit_user_info.dart';
+import 'package:autopaleis/features/cars/car_details.dart';
 import 'package:flutter/material.dart';
 import '../core/constants/app_constants.dart';
 import '../features/home/home_screen.dart';
 import '../features/login/login_screen.dart';
 import '../features/reviews/my_reviews.dart';
 import '../features/rentals/my_rentals.dart';
+import '../features/profile/profile.dart';
 
 class AppRoutes {
   static const String initial = AppConstants.loginRoute;
@@ -13,6 +17,9 @@ class AppRoutes {
     AppConstants.homeRoute: (context) => const Home(),
     AppConstants.myReviewsRoute: (context) => const MyReviewsPage(),
     AppConstants.myRentalsRoute: (context) => const MyRentalsPage(),
+    AppConstants.profileRoute: (context) => const Profile(),
+    AppConstants.userInfoRoute: (context) => const UserInfo(),
+    AppConstants.editUserInfoRoute: (context) => const EditUserInfo(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -25,6 +32,23 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const MyReviewsPage());
       case AppConstants.myRentalsRoute:
         return MaterialPageRoute(builder: (_) => const MyRentalsPage());
+      case AppConstants.profileRoute:
+        return MaterialPageRoute(builder: (_) => const Profile());
+      case AppConstants.userInfoRoute:
+        return MaterialPageRoute(builder: (_) => const UserInfo());
+      case AppConstants.editUserInfoRoute:
+        return MaterialPageRoute(builder: (_) => const EditUserInfo());
+      case AppConstants.carDetailsRoute:
+        if (settings.arguments is Map<String, dynamic>) {
+          return MaterialPageRoute(
+            builder: (_) => CarDetails(car: settings.arguments as Map<String, dynamic>),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => const Scaffold(
+            body: Center(child: Text('Car details not available')),
+          ),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
