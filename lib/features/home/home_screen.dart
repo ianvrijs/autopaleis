@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import '../../core/constants/app_constants.dart';
 import 'package:autopaleis/shared/services/car_service.dart';
+import 'package:autopaleis/shared/models/car_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,6 +14,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = "";
+  final Set<BodyType> _selectedBodyTypes = {};
+  final Set<FuelType> _selectedFuelTypes = {};
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +26,29 @@ class _HomeState extends State<Home> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CarService>().fetchCars();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<CarModel> _filterCars(List<CarModel> cars) {
+    return cars.where((car) {
+      final query = _searchText.toLowerCase();
+      final matchesSearch = query.isEmpty ||
+          car.brand.toLowerCase().contains(query) ||
+          car.model.toLowerCase().contains(query);
+
+      final matchesBodyType = _selectedBodyTypes.isEmpty || 
+          _selectedBodyTypes.contains(car.body);
+
+      final matchesFuelType = _selectedFuelTypes.isEmpty || 
+          _selectedFuelTypes.contains(car.fuel);
+
+      return matchesSearch && matchesBodyType && matchesFuelType;
+    }).toList();
   }
 
   @override
@@ -53,6 +82,48 @@ class _HomeState extends State<Home> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 12),
+            
+            // Top bar
+            Row(
+              children: [
+                // Filters
+                IconButton(
+                  icon: const Icon(Icons.menu),
+                  tooltip: "Filters",
+                  onPressed: () {
+                    _showFilterBottomSheet(context);
+                  },
+                ),
+                
+                const SizedBox(width: 8),
+                
+                // Search bar
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      setState(() {
+                        _searchText = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Zoek auto's...",
+                      prefixIcon: const Icon(Icons.search),
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 12),
+            
             Expanded(
               child: Consumer<CarService>(
                 builder: (context, carService, child) {
@@ -68,11 +139,17 @@ class _HomeState extends State<Home> {
                     return const Center(child: Text('No cars available'));
                   }
 
+                  final filteredCars = _filterCars(carService.carList);
+
+                  if (filteredCars.isEmpty) {
+                    return const Center(child: Text('No cars match your filters'));
+                  }
+
                   return ListView.separated(
-                    itemCount: carService.carList.length,
+                    itemCount: filteredCars.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
-                      final car = carService.carList[index];
+                      final car = filteredCars[index];
                       return _buildRentalCarCard(
                         context,
                         imageUrl: car.picture,
@@ -93,6 +170,135 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showFilterBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Filters',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  const Text(
+                    'Body Type',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: BodyType.values.map((bodyType) {
+                      final isSelected = _selectedBodyTypes.contains(bodyType);
+                      return FilterChip(
+                        label: Text(bodyType.name),
+                        selected: isSelected,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedBodyTypes.add(bodyType);
+                            } else {
+                              _selectedBodyTypes.remove(bodyType);
+                            }
+                          });
+                          setModalState(() {});
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  const Text(
+                    'Fuel Type',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: FuelType.values.map((fuelType) {
+                      final isSelected = _selectedFuelTypes.contains(fuelType);
+                      return FilterChip(
+                        label: Text(fuelType.name),
+                        selected: isSelected,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedFuelTypes.add(fuelType);
+                            } else {
+                              _selectedFuelTypes.remove(fuelType);
+                            }
+                          });
+                          setModalState(() {});
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  Row(
+                    children: [
+                      if (_selectedBodyTypes.isNotEmpty || _selectedFuelTypes.isNotEmpty)
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedBodyTypes.clear();
+                                _selectedFuelTypes.clear();
+                              });
+                              setModalState(() {});
+                            },
+                            child: const Text('Clear All'),
+                          ),
+                        ),
+                      if (_selectedBodyTypes.isNotEmpty || _selectedFuelTypes.isNotEmpty)
+                        const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Apply'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
