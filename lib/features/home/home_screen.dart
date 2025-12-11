@@ -109,6 +109,15 @@ class _HomeState extends State<Home> {
                   },
                 ),
                 
+                // Sort
+                IconButton(
+                  icon: const Icon(Icons.sort),
+                  tooltip: "Sort",
+                  onPressed: () {
+                    _showSortBottomSheet(context);
+                  },
+                ),
+                
                 const SizedBox(width: 8),
                 
                 // Search bar
@@ -317,6 +326,159 @@ class _HomeState extends State<Home> {
                   SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
                 ],
               ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showSortBottomSheet(BuildContext context) {
+    final carService = context.read<CarService>();
+    String? selectedSort = carService.sortCriteria.isNotEmpty 
+        ? carService.sortCriteria.first 
+        : null;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  // Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Sort By',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Sort options
+                  RadioListTile<String>(
+                    title: const Text('Price: Low to High'),
+                    value: 'price,asc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Price: High to Low'),
+                    value: 'price,desc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Brand: A to Z'),
+                    value: 'brand,asc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Brand: Z to A'),
+                    value: 'brand,desc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Model Year: Newest First'),
+                    value: 'modelYear,desc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Model Year: Oldest First'),
+                    value: 'modelYear,asc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Number of Seats'),
+                    value: 'nrOfSeats,desc',
+                    groupValue: selectedSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        selectedSort = value;
+                      });
+                    },
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Action Buttons
+                  Row(
+                    children: [
+                      if (selectedSort != null)
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              carService.setSortCriteria([]);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Clear Sort'),
+                          ),
+                        ),
+                      if (selectedSort != null)
+                        const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (selectedSort != null) {
+                              carService.setSortCriteria([selectedSort!]);
+                            }
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Apply'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             );
           },
         );

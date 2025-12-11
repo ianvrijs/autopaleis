@@ -12,15 +12,26 @@ class CarService with ChangeNotifier {
   int _currentPage = 0;
   bool _hasMoreData = true;
   final int _pageSize = 20;
+  List<String> _sortCriteria = [];
 
   List<CarModel> get carList => _carList;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasMoreData => _hasMoreData;
+  List<String> get sortCriteria => _sortCriteria;
 
   void setAuthToken(String token) {
     _authToken = token;
     notifyListeners();
+  }
+
+  void setSortCriteria(List<String> criteria, {bool refresh = true}) {
+    _sortCriteria = criteria;
+    if (refresh) {
+      fetchCars(refresh: true);
+    } else {
+      notifyListeners();
+    }
   }
 
   Future<void> fetchCars({bool refresh = false}) async {
@@ -37,8 +48,23 @@ class CarService with ChangeNotifier {
     notifyListeners();
 
     try {
-      var url = Uri.parse(
-        'http://localhost:8080/api/cars?page=$_currentPage&size=$_pageSize'
+      final queryParams = {
+        'page': _currentPage.toString(),
+        'size': _pageSize.toString(),
+      };
+      
+      // Add sort parameters
+      for (var sort in _sortCriteria) {
+        queryParams['sort'] = sort;
+      }
+      
+      var url = Uri.parse('http://localhost:8080/api/cars').replace(
+        queryParameters: _sortCriteria.isEmpty 
+            ? queryParams 
+            : {
+                ...queryParams,
+                'sort': _sortCriteria,
+              },
       );
       
       final response = await http.get(
