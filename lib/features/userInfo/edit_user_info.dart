@@ -44,7 +44,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
     ).then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
+          const SnackBar(content: Text('Profiel succesvol bijgewerkt')),
         );
         Navigator.pop(context);
       } else {
@@ -65,7 +65,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Profiel Bewerken'),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -88,7 +88,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             const SizedBox(height: 32),
             // First Name Field
             Text(
-              'First Name',
+              'Voornaam',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -97,7 +97,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             TextField(
               controller: _firstNameController,
               decoration: InputDecoration(
-                hintText: 'Enter first name',
+                hintText: 'Voornaam invoeren',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -106,7 +106,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             const SizedBox(height: 20),
             // Last Name Field
             Text(
-              'Last Name',
+              'Achternaam',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -115,7 +115,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             TextField(
               controller: _lastNameController,
               decoration: InputDecoration(
-                hintText: 'Enter last name',
+                hintText: 'Achternaam invoeren',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -124,7 +124,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             const SizedBox(height: 20),
             // Email Field
             Text(
-              'Email',
+              'E-mailadres',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -133,7 +133,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                hintText: 'Enter email',
+                hintText: 'E-mailadres invoeren',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -151,7 +151,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Save Changes'),
+                    : const Text('Wijzigingen Opslaan'),
               ),
             ),
             const SizedBox(height: 16),
@@ -160,7 +160,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: const Text('Annuleren'),
               ),
             ),
           ],

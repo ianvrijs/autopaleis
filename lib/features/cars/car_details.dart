@@ -13,7 +13,7 @@ class CarDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Car Details'),
+        title: const Text('Auto Details'),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -40,32 +40,32 @@ class CarDetails extends StatelessWidget {
                   // Overview Section
                   _buildSection(
                     context,
-                    title: 'Overview',
+                    title: 'Overzicht',
                     items: [
-                      _InfoItem('Year', car['year']?.toString() ?? 'N/A'),
-                      _InfoItem('Options', car['options'] ?? 'N/A'),
-                      _InfoItem('Fuel Type', car['fuelType'] ?? 'N/A'),
-                      _InfoItem('Seats', car['seats']?.toString() ?? 'N/A'),
+                      _InfoItem('Jaar', car['year']?.toString() ?? 'N/A'),
+                      _InfoItem('Opties', car['options'] ?? 'N/A'),
+                      _InfoItem('Brandstoftype', car['fuelType'] ?? 'N/A'),
+                      _InfoItem('Zitplaatsen', car['seats']?.toString() ?? 'N/A'),
                     ],
                   ),
                   const SizedBox(height: 16),
                   // Features Section
                   _buildSection(
                     context,
-                    title: 'Features',
+                    title: 'Kenmerken',
                     items: [
-                      _InfoItem('Body Type', car['body'] ?? 'N/A'),
-                      _InfoItem('Engine Size', car['engineSize']?.toString() ?? 'N/A'),
-                      _InfoItem('License Plate', car['licensePlate']?.toString() ?? 'N/A'),
+                      _InfoItem('Carrosserietype', car['body'] ?? 'N/A'),
+                      _InfoItem('Motorinhoud', car['engineSize']?.toString() ?? 'N/A'),
+                      _InfoItem('Kenteken', car['licensePlate']?.toString() ?? 'N/A'),
                     ],
                   ),
                   const SizedBox(height: 16),
                   // Price and Book Button
                   _buildPriceAndBook(context),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   // Reviews Section
                   _buildReviewsSection(context),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -136,9 +136,9 @@ class CarDetails extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 3.5,
+              childAspectRatio: 2.8,
               crossAxisSpacing: 12,
-              mainAxisSpacing: 8,
+              mainAxisSpacing: 12,
             ),
             itemCount: items.length,
             itemBuilder: (context, index) {
@@ -161,13 +161,17 @@ class CarDetails extends StatelessWidget {
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,
               ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2),
         Text(
           item.value,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -178,14 +182,14 @@ class CarDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Price',
+          'Prijs',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 8),
         Text(
-          '€${car['price']}/day',
+          '€${car['price']}/dag',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
@@ -198,7 +202,7 @@ class CarDetails extends StatelessWidget {
             onPressed: () {
               // TODO: Navigate to booking page
             },
-            child: const Text('Book Now'),
+            child: const Text('Boek Nu'),
           ),
         ),
       ],
@@ -210,12 +214,12 @@ class CarDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Reviews',
+          'Recente Beoordelingen',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         // Rating Bar
         Container(
           padding: const EdgeInsets.all(12),
@@ -230,7 +234,7 @@ class CarDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Rating',
+                    'Beoordeling',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w600,
@@ -259,7 +263,7 @@ class CarDetails extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         // Review Items
         Container(
           padding: const EdgeInsets.all(12),
@@ -270,14 +274,14 @@ class CarDetails extends StatelessWidget {
           child: Column(
             children: [
               _buildReviewItem(context, 'John Doe', '2024-01-15', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-              const SizedBox(height: 12),
-              _buildReviewItem(context, 'Jane Smith', '2024-01-10', 'Great car, very comfortable and reliable. Highly recommended!'),
-              const SizedBox(height: 12),
-              _buildReviewItem(context, 'Mike Johnson', '2024-01-05', 'Amazing experience. The car is in perfect condition.'),
+              const SizedBox(height: 8),
+              _buildReviewItem(context, 'Jane Smith', '2024-01-10', 'Geweldige auto, erg comfortabel en betrouwbaar. Zeer aanbevolen!'),
+              const SizedBox(height: 8),
+              _buildReviewItem(context, 'Mike Johnson', '2024-01-05', 'Geweldige ervaring. De auto is in perfecte staat.'),
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         // Load More Button
         SizedBox(
           width: double.infinity,
@@ -285,10 +289,10 @@ class CarDetails extends StatelessWidget {
             onPressed: () {
               // TODO: Load more reviews
             },
-            child: const Text('Load More Reviews'),
+            child: const Text('Meer beoordelingen laden'),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         // Write Review Button
         SizedBox(
           width: double.infinity,
@@ -299,7 +303,7 @@ class CarDetails extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber,
             ),
-            child: const Text('Write a Review'),
+            child: const Text('Schrijf een beoordeling'),
           ),
         ),
       ],
