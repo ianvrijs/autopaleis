@@ -66,12 +66,12 @@ class _RentalDetailsPageState extends State<RentalDetailsPage> {
           _section(
             title: "Car",
             children: [
-              Text("Brand: ${r.car.brand}"),
+              Text("Merk: ${r.car.brand}"),
               Text("Model: ${r.car.model}"),
-              Text("Fuel: ${r.car.fuel}"),
-              Text("Year: ${r.car.modelYear}"),
-              Text("Seats: ${r.car.nrOfSeats}"),
-              Text("License plate: ${r.car.licensePlate}"),
+              Text("Brandstof: ${r.car.fuel}"),
+              Text("Jaar: ${r.car.modelYear}"),
+              Text("Zitplaatsen: ${r.car.nrOfSeats}"),
+              Text("Nummerbord: ${r.car.licensePlate}"),
             ],
           ),
 
@@ -79,11 +79,11 @@ class _RentalDetailsPageState extends State<RentalDetailsPage> {
           _section(
             title: "Rental",
             children: [
-              Text("From: ${r.fromDate}"),
-              Text("To: ${r.toDate}"),
-              Text("State: ${r.state}"),
+              Text("Van: ${r.fromDate}"),
+              Text("Tot: ${r.toDate}"),
+              Text("Staat: ${r.state}"),
               Text("Code: ${r.code}"),
-              Text("Coordinates: ${r.longitude}, ${r.latitude}"),
+              Text("Coördinaten: ${r.longitude}, ${r.latitude}"),
             ],
           ),
 
@@ -91,9 +91,9 @@ class _RentalDetailsPageState extends State<RentalDetailsPage> {
           _section(
             title: "Customer",
             children: [
-              Text("Name: ${r.customer.firstName} ${r.customer.lastName}"),
-              Text("Customer Nr: ${r.customer.nr}"),
-              Text("Member since: ${r.customer.from}"),
+              Text("Naam: ${r.customer.firstName} ${r.customer.lastName}"),
+              Text("Klant Nr: ${r.customer.nr}"),
+              Text("Klant sinds: ${r.customer.from}"),
             ],
           ),
 
@@ -106,11 +106,11 @@ class _RentalDetailsPageState extends State<RentalDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Inspection Code: ${ins.code}"),
-                    Text("Odometer: ${ins.odometer}"),
-                    Text("Result: ${ins.result}"),
-                    Text("Description: ${ins.description}"),
-                    Text("Completed: ${ins.completed}"),
+                    Text("Inspectie Code: ${ins.code}"),
+                    Text("Kilometerteller: ${ins.odometer}"),
+                    Text("Resultaat: ${ins.result}"),
+                    Text("Omschrijving: ${ins.description}"),
+                    Text("Voltooid: ${ins.completed}"),
                   ],
                 ),
               );
