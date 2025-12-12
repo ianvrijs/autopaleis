@@ -7,6 +7,7 @@ import '../features/home/home_screen.dart';
 import '../features/login/login_screen.dart';
 import '../features/reviews/my_reviews.dart';
 import '../features/rentals/my_rentals.dart';
+import '../features/rentals/rental_details_page.dart';
 import '../features/profile/profile.dart';
 
 class AppRoutes {
@@ -17,6 +18,7 @@ class AppRoutes {
     AppConstants.homeRoute: (context) => const Home(),
     AppConstants.myReviewsRoute: (context) => const MyReviewsPage(),
     AppConstants.myRentalsRoute: (context) => const MyRentalsPage(),
+   // AppConstants.rentalDetailsRoute: (context) => const RentalDetailsPage(),
     AppConstants.profileRoute: (context) => const Profile(),
     AppConstants.userInfoRoute: (context) => const UserInfo(),
     AppConstants.editUserInfoRoute: (context) => const EditUserInfo(),
@@ -32,6 +34,11 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const MyReviewsPage());
       case AppConstants.myRentalsRoute:
         return MaterialPageRoute(builder: (_) => const MyRentalsPage());
+      case AppConstants.rentalDetailsRoute:
+      final rentalId = settings.arguments as int;
+      return MaterialPageRoute(
+        builder: (_) => RentalDetailsPage(rentalId: rentalId),
+      );
       case AppConstants.profileRoute:
         return MaterialPageRoute(builder: (_) => const Profile());
       case AppConstants.userInfoRoute:
