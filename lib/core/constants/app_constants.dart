@@ -10,6 +10,7 @@ class AppConstants {
   static const String loginRoute = '/login';
   static const String myReviewsRoute = '/my_reviews';
   static const String myRentalsRoute = '/my_rentals';
+  static const String rentalDetailsRoute = '/rental-details';
 
   // Validation
   static const int minPasswordLength = 4;

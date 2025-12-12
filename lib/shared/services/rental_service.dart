@@ -52,4 +52,20 @@ class RentalService with ChangeNotifier {
         .map((e) => RentalModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  Future<RentalModel> fetchRentalById(int id) async {
+  var url = Uri.parse('http://localhost:8080/api/rentals/$id');
+
+  final response = await http.get(
+    url,
+    headers: _authToken != null ? {'Authorization': 'Bearer $_authToken'} : {},
+  );
+
+  if (response.statusCode == 200) {
+    return RentalModel.fromJson(json.decode(response.body));
+  } else {
+    throw Exception("Failed to load rental: ${response.statusCode}");
+  }
+}
+
 }
