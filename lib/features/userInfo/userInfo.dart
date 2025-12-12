@@ -10,7 +10,7 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Account Info'),
+        title: const Text('Accountgegevens'),
         elevation: 0,
       ),
       body: Consumer<AuthService>(
@@ -19,7 +19,7 @@ class UserInfo extends StatelessWidget {
 
           if (user == null) {
             return const Center(
-              child: Text('No user data available'),
+              child: Text('Geen gebruikersgegevens beschikbaar'),
             );
           }
 
@@ -55,26 +55,26 @@ class UserInfo extends StatelessWidget {
                 // User Info Fields
                 _buildInfoSection(
                   context,
-                  label: 'Username',
+                  label: 'Gebruikersnaam',
                   value: user.username,
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
                   context,
-                  label: 'Email',
+                  label: 'E-mailadres',
                   value: user.email,
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
                   context,
-                  label: 'First Name',
-                  value: user.firstName ?? 'Not set',
+                  label: 'Voornaam',
+                  value: user.firstName ?? 'Niet ingesteld',
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
                   context,
-                  label: 'Last Name',
-                  value: user.lastName ?? 'Not set',
+                  label: 'Achternaam',
+                  value: user.lastName ?? 'Niet ingesteld',
                 ),
                 const SizedBox(height: 32),
                 // Edit Button
@@ -84,7 +84,7 @@ class UserInfo extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, AppConstants.editUserInfoRoute);
                     },
-                    child: const Text('Edit Profile'),
+                    child: const Text('Profiel Bewerken'),
                   ),
                 ),
               ],

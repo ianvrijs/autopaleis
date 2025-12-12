@@ -10,7 +10,7 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: const Text('Mijn Profiel'),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -22,7 +22,7 @@ class Profile extends StatelessWidget {
             // Main Menu Sections
             _buildMenuSection(
               context,
-              title: 'My Rentals',
+              title: 'Mijn boekingen',
               icon: Icons.calendar_today,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.myRentalsRoute);
@@ -30,7 +30,7 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Favorite Cars',
+              title: 'Favoriete Auto\'s',
               icon: Icons.favorite,
               onTap: () {
                 // Navigate to favorite cars
@@ -38,7 +38,7 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Account Info',
+              title: 'Accountgegevens',
               icon: Icons.info,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.userInfoRoute);
@@ -46,7 +46,7 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Notifications',
+              title: 'Meldingen',
               icon: Icons.notifications,
               onTap: () {
                 // Navigate to notifications
@@ -54,7 +54,7 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Help & Support',
+              title: 'Hulp & Ondersteuning',
               icon: Icons.help,
               onTap: () {
                 // Navigate to help
@@ -62,7 +62,7 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Logout',
+              title: 'Afmelden',
               icon: Icons.logout,
               onTap: () {
                 _showLogoutDialog(context);
@@ -162,19 +162,19 @@ class Profile extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
+          title: const Text('Afmelden'),
+          content: const Text('Weet je zeker dat je wilt afmelden?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('Annuleren'),
             ),
             TextButton(
               onPressed: () {
                 context.read<AuthService>().logout();
                 Navigator.pushReplacementNamed(context, AppConstants.loginRoute);
               },
-              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+              child: const Text('Afmelden', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
