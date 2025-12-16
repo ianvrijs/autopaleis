@@ -16,6 +16,10 @@ class AppConstants {
   static const String editUserInfoRoute = '/edit_user_info';
   static const String carDetailsRoute = '/car_details';
 
+  // Admin
+  static const String adminDashboardRoute = '/admin';
+  static const String adminRentalsRoute = '/admin/rentals';
+
   // Validation
   static const int minPasswordLength = 4;
   static const int maxUsernameLength = 50;

@@ -146,4 +146,16 @@ class AuthService with ChangeNotifier {
     Map<String, dynamic> parsedJson = json.decode(jsonString);
     return User.fromJson(parsedJson);
   }
+
+  bool get isAdmin {
+  return _currentUser?.authorities.contains('ROLE_ADMIN') ?? false;
+  }
+
+  bool get isUser {
+    return _currentUser?.authorities.contains('ROLE_USER') ?? false;
+}
+
+  bool hasRole(String role) {
+    return _currentUser?.authorities.contains(role) ?? false;
+  }
 }

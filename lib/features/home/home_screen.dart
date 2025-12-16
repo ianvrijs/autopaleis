@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../../core/constants/app_constants.dart';
 import 'package:autopaleis/shared/services/car_service.dart';
 import 'package:autopaleis/shared/models/car_model.dart';
+import '../../shared/services/auth_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -96,6 +97,17 @@ class _HomeState extends State<Home> {
             tooltip: "Profiel",
             onPressed: () {
               Navigator.pushNamed(context, AppConstants.profileRoute);
+            },
+          ),
+          if (context.watch<AuthService>().isAdmin)
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            tooltip: "Admin Paneel",
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AppConstants.adminDashboardRoute,
+              );
             },
           ),
         ],
