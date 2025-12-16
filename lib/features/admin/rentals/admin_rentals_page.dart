@@ -32,7 +32,7 @@ class _AdminRentalsPageState extends State<AdminRentalsPage> {
 
                 return ListTile(
                   leading: const Icon(Icons.car_rental),
-                  title: Text('Rental #${rental.id}'),
+                  title: Text('Rental ${rental.code}'),
                   subtitle: Text(
                     'Status: ${rental.state}\n'
                     'Van ${rental.fromDate} tot ${rental.toDate}',

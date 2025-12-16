@@ -11,7 +11,7 @@ import '../features/rentals/rental_details_page.dart';
 import '../features/profile/profile.dart';
 import '../features/admin/admin_dashboard.dart';
 import '../features/admin/rentals/admin_rentals_page.dart';
-//import '../features/admin/repairs/admin_repairs_page.dart';
+import '../features/admin/repairs/admin_repairs_page.dart';
 //import '../features/admin/damages/admin_damages_page.dart';
 
 
@@ -29,7 +29,7 @@ class AppRoutes {
     AppConstants.editUserInfoRoute: (context) => const EditUserInfo(),
     AppConstants.adminDashboardRoute: (context) => const AdminDashboard(),
     AppConstants.adminRentalsRoute: (context) => const AdminRentalsPage(),
-    // '/admin/repairs': (_) => const AdminRepairsPage(),
+    AppConstants.adminRepairsRoute: (_) => const AdminRepairsPage(),
     // '/admin/damages': (_) => const AdminDamagesPage(),
   };
 
