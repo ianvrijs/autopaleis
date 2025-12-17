@@ -9,6 +9,11 @@ import '../features/reviews/my_reviews.dart';
 import '../features/rentals/my_rentals.dart';
 import '../features/rentals/rental_details_page.dart';
 import '../features/profile/profile.dart';
+import '../features/admin/admin_dashboard.dart';
+import '../features/admin/rentals/admin_rentals_page.dart';
+import '../features/admin/repairs/admin_repairs_page.dart';
+//import '../features/admin/damages/admin_damages_page.dart';
+
 
 class AppRoutes {
   static const String initial = AppConstants.loginRoute;
@@ -22,6 +27,10 @@ class AppRoutes {
     AppConstants.profileRoute: (context) => const Profile(),
     AppConstants.userInfoRoute: (context) => const UserInfo(),
     AppConstants.editUserInfoRoute: (context) => const EditUserInfo(),
+    AppConstants.adminDashboardRoute: (context) => const AdminDashboard(),
+    AppConstants.adminRentalsRoute: (context) => const AdminRentalsPage(),
+    AppConstants.adminRepairsRoute: (_) => const AdminRepairsPage(),
+    // '/admin/damages': (_) => const AdminDamagesPage(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
