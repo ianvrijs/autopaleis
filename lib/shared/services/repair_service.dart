@@ -46,4 +46,35 @@ class RepairService with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> createRepair({
+    required int carId,
+    required String description,
+  }) async {
+    try {
+      final url = Uri.parse('http://localhost:8080/api/repairs');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $_token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'description': description,
+          'repairStatus': 'PLANNED',
+          'car': {
+            'id': carId,
+          },
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await fetchRepairs();
+      } else {
+        throw Exception('Failed to create repair: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error creating repair: $e');
+    }
+  }
 }
