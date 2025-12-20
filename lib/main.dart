@@ -5,6 +5,7 @@ import 'shared/services/car_service.dart';
 import 'shared/services/auth_service.dart';
 import 'shared/services/rental_service.dart';
 import 'shared/services/repair_service.dart';
+import 'shared/services/favorites_service.dart';
 
 void main() {
   runApp(
@@ -14,6 +15,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => CarService()),
         ChangeNotifierProvider(create: (_) => RentalService()),
         ChangeNotifierProvider(create: (_) => RepairService()),
+        ChangeNotifierProvider(create: (_) => FavoritesService()),
       ],
       child: const MyApp(),
     ),
