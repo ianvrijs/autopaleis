@@ -6,6 +6,7 @@ import '../../core/constants/app_constants.dart';
 import 'package:autopaleis/shared/services/car_service.dart';
 import 'package:autopaleis/shared/models/car_model.dart';
 import '../../shared/services/auth_service.dart';
+import '../../shared/services/favorites_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CarService>().fetchCars(refresh: true);
+      context.read<FavoritesService>().loadFavorites();
     });
   }
 
@@ -100,16 +102,13 @@ class _HomeState extends State<Home> {
             },
           ),
           if (context.watch<AuthService>().isAdmin)
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            tooltip: "Admin Paneel",
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                AppConstants.adminDashboardRoute,
-              );
-            },
-          ),
+            IconButton(
+              icon: const Icon(Icons.account_circle),
+              tooltip: "Admin Paneel",
+              onPressed: () {
+                Navigator.pushNamed(context, AppConstants.adminDashboardRoute);
+              },
+            ),
         ],
       ),
       body: Padding(
@@ -207,8 +206,24 @@ class _HomeState extends State<Home> {
                       }
                       
                       final car = filteredCars[index];
+                      final carData = {
+                        'id': car.id,
+                        'brand': car.brand,
+                        'model': car.model,
+                        'picture': car.picture,
+                        'price': car.price,
+                        'body': car.body.name,
+                        'year': car.modelYear,
+                        'options': car.options,
+                        'fuelType': car.fuel.name,
+                        'seats': car.nrOfSeats,
+                        'engineSize': car.engineSize.toString(),
+                        'licensePlate': car.licensePlate,
+                        'since': car.since,
+                      };
                       return _buildRentalCarCard(
                         context,
+                        carData: carData,
                         imageUrl: car.picture,
                         brand: car.brand,
                         model: car.model,
@@ -219,21 +234,7 @@ class _HomeState extends State<Home> {
                           Navigator.pushNamed(
                             context,
                             AppConstants.carDetailsRoute,
-                            arguments: {
-                              'id': car.id,
-                              'brand': car.brand,
-                              'model': car.model,
-                              'picture': car.picture,
-                              'price': car.price,
-                              'body': car.body.name,
-                              'year': car.modelYear,
-                              'options': car.options,
-                              'fuelType': car.fuel.name,
-                              'seats': car.nrOfSeats,
-                              'engineSize': car.engineSize.toString(),
-                              'licensePlate': car.licensePlate,
-                              'since': car.since,
-                            },
+                            arguments: carData,
                           );
                         },
                       );
@@ -532,6 +533,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildRentalCarCard(
     BuildContext context, {
+    required Map<String, dynamic> carData,
     required String imageUrl,
     required String brand,
     required String model,
@@ -540,6 +542,10 @@ class _HomeState extends State<Home> {
     required String price,
     required VoidCallback onTap,
   }) {
+    final favoritesService = context.watch<FavoritesService>();
+    final carId = FavoritesService.getCarId(carData);
+    final isFavorite = favoritesService.isFavorite(carId);
+    
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -559,14 +565,28 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Brand | Model
-                    Text(
-                      '$brand | $model',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                    // Brand | Model with Favorite Icon
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '$brand | $model',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                        ),
+                        InkWell(
+                          onTap: () => favoritesService.toggleFavorite(carId),
+                          child: Icon(
+                            isFavorite ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                            size: 20,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
                     // Car body

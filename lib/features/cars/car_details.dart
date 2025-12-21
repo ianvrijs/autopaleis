@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
+import '../../shared/services/favorites_service.dart';
 
 class CarDetails extends StatelessWidget {
   final Map<String, dynamic> car;
 
-  const CarDetails({
-    super.key,
-    required this.car,
-  });
+  const CarDetails({super.key, required this.car});
 
   @override
   Widget build(BuildContext context) {
+    final favoritesService = context.watch<FavoritesService>();
+    final carId = FavoritesService.getCarId(car);
+    final isFavorite = favoritesService.isFavorite(carId);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Auto Details'),
@@ -29,12 +32,25 @@ class CarDetails extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Brand and Model
-                  Text(
-                    '${car['brand']} ${car['model']}',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                  // Brand and Model with Favorite Icon
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${car['brand']} ${car['model']}',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          isFavorite ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                          size: 32,
+                        ),
+                        onPressed: () => favoritesService.toggleFavorite(carId),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   // Overview Section
