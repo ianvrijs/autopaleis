@@ -60,6 +60,31 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _handleGitHubLogin() async {
+    final authService = context.read<AuthService>();
+    final carService = context.read<CarService>();
+    final rentalService = context.read<RentalService>();
+    final repairService = context.read<RepairService>();
+
+    final success = await authService.loginWithGitHub();
+
+    if (mounted) {
+      if (success) {
+        carService.setAuthToken(authService.token!);
+        rentalService.setAuthToken(authService.token!);
+        repairService.setAuthToken(authService.token!);
+        Navigator.pushNamed(context, AppConstants.homeRoute);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authService.error ?? 'GitHub login failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,6 +185,45 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Handle forgot password
                     },
                     child: const Text('Forgot Password?'),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'OR',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                        ),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Consumer<AuthService>(
+                    builder: (context, authService, child) {
+                      return OutlinedButton.icon(
+                        onPressed: authService.isLoading
+                            ? null
+                            : _handleGitHubLogin,
+                        icon: authService.isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.code),
+                        label: const Text('Continue with GitHub'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
