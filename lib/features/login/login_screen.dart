@@ -91,16 +91,16 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset Password'),
+        title: const Text('Wachtwoord Opnieuw Instellen'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Enter your email address to receive a password reset link.'),
+            const Text('Wat is je e-mailadres? Dan zenden we je binnen enkele minuten een linkje om een nieuw wachtwoord in te stellen.'),
             const SizedBox(height: 16),
             TextField(
               controller: emailController,
               decoration: InputDecoration(
-                labelText: 'Email',
+                labelText: 'E-mailadres',
                 prefixIcon: const Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Annuleren'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (email.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter your email'),
+                    content: Text('Voer uw e-mailadres in'),
                     backgroundColor: Colors.orange,
                   ),
                 );
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (!email.contains('@')) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter a valid email'),
+                    content: Text('Voer een geldig e-mailadres in'),
                     backgroundColor: Colors.orange,
                   ),
                 );
@@ -154,21 +154,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Password reset email sent! Check your inbox.'),
+                      content: Text('E-mail voor wachtwoordherstel verzonden! Controleer uw inbox.'),
                       backgroundColor: Colors.green,
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to send reset email. Please try again.'),
+                      content: Text('Het verzenden van de herstel-e-mail is mislukt. Probeer het opnieuw.'),
                       backgroundColor: Colors.red,
                     ),
                   );
                 }
               }
             },
-            child: const Text('Send Reset Link'),
+            child: const Text('Verzenden'),
           ),
         ],
       ),

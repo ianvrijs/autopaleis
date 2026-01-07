@@ -33,10 +33,10 @@ class EmailService {
       }
 
       await send(message, smtpServer);
-      print('Email sent successfully to $recipientEmail');
+      print('E-mail succesvol verzonden naar $recipientEmail');
       return true;
     } catch (e) {
-      print('Error sending email: $e');
+      print('Fout bij het verzenden van e-mail: $e');
       return false;
     }
   }
@@ -47,18 +47,18 @@ class EmailService {
   ) {
     final resetLink = '';
     final htmlBody = '''
-      <h2>Password Reset Request</h2>
-      <p>We received a request to reset your password.</p>
-      <p><a href="$resetLink">Click here to reset your password</a></p>
-      <p>If you didn't request this, please ignore this email.</p>
-      <p>This link expires in 24 hours.</p>
+      <h2>Aanvraag Wachtwoord Opnieuw Instellen</h2>
+      <p>We hebben een aanvraag ontvangen om uw wachtwoord opnieuw in te stellen.</p>
+      <p><a href="$resetLink">Klik hier om uw wachtwoord opnieuw in te stellen</a></p>
+      <p>Als u dit niet hebt aangevraagd, kunt u deze e-mail negeren.</p>
+      <p>Deze link verloopt in 24 uur.</p>
       <hr>
-      <p>Best regards,<br>The AutoPaleis Team</p>
+      <p>Met vriendelijke groeten,<br>Het AutoPaleis Team</p>
     ''';
 
     return sendEmail(
       recipientEmail: userEmail,
-      subject: 'Password Reset - AutoPaleis',
+      subject: 'Wachtwoord Opnieuw Instellen - AutoPaleis',
       body: htmlBody,
       isHtml: true,
     );
