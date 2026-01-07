@@ -5,6 +5,7 @@ import '../../shared/services/auth_service.dart';
 import '../../shared/services/car_service.dart';
 import '../../shared/services/rental_service.dart';
 import '../../shared/services/repair_service.dart';
+import '../../shared/services/email_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -83,6 +84,95 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
+  }
+
+  Future<void> _handleForgotPassword() async {
+    final emailController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Wachtwoord Opnieuw Instellen'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Wat is je e-mailadres? Dan zenden we je binnen enkele minuten een linkje om een nieuw wachtwoord in te stellen.'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'E-mailadres',
+                prefixIcon: const Icon(Icons.email),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annuleren'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final email = emailController.text.trim();
+              
+              if (email.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Voer uw e-mailadres in'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+                return;
+              }
+
+              if (!email.contains('@')) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Voer een geldig e-mailadres in'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+                return;
+              }
+
+              // Generate a reset token (in production, this should come from your backend)
+              final resetToken = DateTime.now().millisecondsSinceEpoch.toString();
+              print('Generated reset token: $resetToken');
+
+              // Send password reset email
+              final success = await EmailService.sendPasswordResetEmail(
+                email,
+              );
+
+              if (mounted) {
+                Navigator.pop(context);
+                
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('E-mail voor wachtwoordherstel verzonden! Controleer uw inbox.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Het verzenden van de herstel-e-mail is mislukt. Probeer het opnieuw.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Verzenden'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -181,9 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextButton(
-                    onPressed: () {
-                      // Handle forgot password
-                    },
+                    onPressed: _handleForgotPassword,
                     child: const Text('Forgot Password?'),
                   ),
                   const SizedBox(height: 24),
