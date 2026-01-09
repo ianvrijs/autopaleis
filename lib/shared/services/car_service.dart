@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -58,7 +59,7 @@ class CarService with ChangeNotifier {
         queryParams['sort'] = sort;
       }
       
-      var url = Uri.parse('http://localhost:8080/api/cars').replace(
+      var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/cars').replace(
         queryParameters: _sortCriteria.isEmpty 
             ? queryParams 
             : {

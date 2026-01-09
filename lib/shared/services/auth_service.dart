@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:autopaleis/shared/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -22,7 +23,7 @@ class AuthService with ChangeNotifier {
     notifyListeners();
 
     try {
-      var url = Uri.parse('http://localhost:8080/api/authenticate');
+      var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/authenticate');
       
       final response = await http.post(
         url,
@@ -39,7 +40,7 @@ class AuthService with ChangeNotifier {
         _token = data['id_token'];
         notifyListeners();
 
-        var accountUrl = Uri.parse('http://localhost:8080/api/AM/account');
+        var accountUrl = Uri.parse('${dotenv.env['API_BASE_URL']}/api/AM/account');
         final accResponse = await http.get(
           accountUrl,
           headers: _token != null ? {'Authorization': 'Bearer $_token'} : {},
@@ -76,7 +77,7 @@ class AuthService with ChangeNotifier {
 
   Future<void> _fetchUserData() async {
     try {
-      var url = Uri.parse('http://localhost:8080/api/AM/account');
+      var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/AM/account');
       final response = await http.get(
         url,
         headers: {
@@ -101,7 +102,7 @@ class AuthService with ChangeNotifier {
     required String email,
   }) async {
     try {
-      var url = Uri.parse('http://localhost:8080/api/AM/account');
+      var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/AM/account');
       
       final authorities = _currentUser?.authorities;
       
@@ -258,7 +259,7 @@ class AuthService with ChangeNotifier {
       final githubPassword = 'GithubOAuth2024!_${githubUser['id']}';
 
       // Try to login first
-      var loginUrl = Uri.parse('http://localhost:8080/api/authenticate');
+      var loginUrl = Uri.parse('${dotenv.env['API_BASE_URL']}/api/authenticate');
       var loginResponse = await http.post(
         loginUrl,
         headers: {'Content-Type': 'application/json'},
@@ -271,7 +272,7 @@ class AuthService with ChangeNotifier {
 
       // If login fails (user doesn't exist), try to register
       if (loginResponse.statusCode != 200) {
-        var registerUrl = Uri.parse('http://localhost:8080/api/register');
+        var registerUrl = Uri.parse('${dotenv.env['API_BASE_URL']}/api/register');
 
         var registerResponse = await http.post(
           registerUrl,
@@ -310,7 +311,7 @@ class AuthService with ChangeNotifier {
         _token = data['id_token'];
 
         // Fetch user account from backend
-        var accountUrl = Uri.parse('http://localhost:8080/api/AM/account');
+        var accountUrl = Uri.parse('${dotenv.env['API_BASE_URL']}/api/AM/account');
         final accResponse = await http.get(
           accountUrl,
           headers: {'Authorization': 'Bearer $_token'},

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../models/repair_model.dart';
 
@@ -22,7 +23,7 @@ class RepairService with ChangeNotifier {
     notifyListeners();
 
     try {
-      final url = Uri.parse('http://localhost:8080/api/repairs');
+      final url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/repairs');
       final response = await http.get(
         url,
         headers: {
@@ -52,7 +53,7 @@ class RepairService with ChangeNotifier {
     required String description,
   }) async {
     try {
-      final url = Uri.parse('http://localhost:8080/api/repairs');
+      final url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/repairs');
       final response = await http.post(
         url,
         headers: {

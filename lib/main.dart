@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'app.dart';
 import 'shared/services/car_service.dart';
@@ -7,7 +8,9 @@ import 'shared/services/rental_service.dart';
 import 'shared/services/repair_service.dart';
 import 'shared/services/favorites_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(
     MultiProvider(
       providers: [
