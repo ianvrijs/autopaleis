@@ -22,7 +22,7 @@ class Profile extends StatelessWidget {
             // Main Menu Sections
             _buildMenuSection(
               context,
-              title: 'Mijn boekingen',
+              title: 'Mijn Boekingen',
               icon: Icons.calendar_today,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.myRentalsRoute);
@@ -42,22 +42,6 @@ class Profile extends StatelessWidget {
               icon: Icons.info,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.userInfoRoute);
-              },
-            ),
-            _buildMenuSection(
-              context,
-              title: 'Meldingen',
-              icon: Icons.notifications,
-              onTap: () {
-                // Navigate to notifications
-              },
-            ),
-            _buildMenuSection(
-              context,
-              title: 'Hulp & Ondersteuning',
-              icon: Icons.help,
-              onTap: () {
-                // Navigate to help
               },
             ),
             _buildMenuSection(
