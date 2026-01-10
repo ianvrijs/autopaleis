@@ -33,7 +33,7 @@ class Profile extends StatelessWidget {
               title: 'Favoriete Auto\'s',
               icon: Icons.favorite,
               onTap: () {
-                // Navigate to favorite cars
+                Navigator.pushNamed(context, AppConstants.favoritesRoute);
               },
             ),
             _buildMenuSection(
