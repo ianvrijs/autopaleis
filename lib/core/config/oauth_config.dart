@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class OAuthConfig {
   // GitHub OAuth Configuration
@@ -12,5 +13,5 @@ class OAuthConfig {
   static const List<String> githubScopes = ['read:user', 'user:email'];
   
   // Backend OAuth endpoint
-  static const String backendOAuthEndpoint = 'http://localhost:8080/api/oauth/github';
+  static final String backendOAuthEndpoint = '${dotenv.env['API_BASE_URL']}/api/oauth/github';
 }

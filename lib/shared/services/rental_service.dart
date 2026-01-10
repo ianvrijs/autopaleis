@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -24,7 +25,7 @@ class RentalService with ChangeNotifier {
     notifyListeners();
 
     try {
-      var url = Uri.parse('http://localhost:8080/api/rentals');
+      var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/rentals');
 
       final response = await http.get(
         url,
@@ -54,7 +55,7 @@ class RentalService with ChangeNotifier {
   }
 
   Future<RentalModel> fetchRentalById(int id) async {
-  var url = Uri.parse('http://localhost:8080/api/rentals/$id');
+  var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/rentals/$id');
 
   final response = await http.get(
     url,
