@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
+// import 'dart:convert';
 
 import '../../core/constants/app_constants.dart';
 import 'package:autopaleis/shared/services/car_service.dart';
 import 'package:autopaleis/shared/models/car_model.dart';
 import '../../shared/services/auth_service.dart';
 import '../../shared/services/favorites_service.dart';
+import '../../shared/widgets/car_card.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -164,6 +165,7 @@ class _HomeState extends State<Home> {
 
                       return ListView.separated(
                         controller: _scrollController,
+                        padding: const EdgeInsets.only(bottom: 80),
                         itemCount: filteredCars.length +
                             (carService.hasMoreData &&
                                     carService.isLoading &&
@@ -182,38 +184,7 @@ class _HomeState extends State<Home> {
                           }
 
                           final car = filteredCars[index];
-                          final carData = {
-                            'id': car.id,
-                            'brand': car.brand,
-                            'model': car.model,
-                            'picture': car.picture,
-                            'price': car.price,
-                            'body': car.body.name,
-                            'year': car.modelYear,
-                            'options': car.options,
-                            'fuelType': car.fuel.name,
-                            'seats': car.nrOfSeats,
-                            'engineSize': car.engineSize.toString(),
-                            'licensePlate': car.licensePlate,
-                            'since': car.since,
-                          };
-                          return _buildRentalCarCard(
-                            context,
-                            carData: carData,
-                            imageUrl: car.picture,
-                            brand: car.brand,
-                            model: car.model,
-                            carType: car.body.name,
-                            distance: '2.5 km', // Calculate from lat/long
-                            price: '€${car.price}/day',
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppConstants.carDetailsRoute,
-                                arguments: carData,
-                              );
-                            },
-                          );
+                          return CarCard(car: car);
                         },
                       );
                     },
@@ -573,140 +544,6 @@ class _HomeState extends State<Home> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildRentalCarCard(
-    BuildContext context, {
-    required Map<String, dynamic> carData,
-    required String imageUrl,
-    required String brand,
-    required String model,
-    required String carType,
-    required String distance,
-    required String price,
-    required VoidCallback onTap,
-  }) {
-    final favoritesService = context.watch<FavoritesService>();
-    final carId = FavoritesService.getCarId(carData);
-    final isFavorite = favoritesService.isFavorite(carId);
-    
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              // Left column
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Brand | Model with Favorite Icon
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '$brand | $model',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () => favoritesService.toggleFavorite(carId),
-                          child: Icon(
-                            isFavorite ? Icons.star : Icons.star_border,
-                            color: Colors.amber,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    // Car body
-                    Text(
-                      carType,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                    const SizedBox(height: 24),
-                    // Distance and Price
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          distance,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
-                        ),
-                        Text(
-                          price,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Right column
-              Expanded(
-                flex: 2,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: _buildCarImage(imageUrl),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCarImage(String imageData) {
-    try {
-      // Remove data URL prefix if present
-      String base64String = imageData;
-      if (imageData.contains(',')) {
-        base64String = imageData.split(',')[1];
-      }
-      
-      final bytes = base64.decode(base64String);
-      return Image.memory(
-        bytes,
-        height: 100,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildPlaceholder();
-        },
-      );
-    } catch (e) {
-      return _buildPlaceholder();
-    }
-  }
-
-  Widget _buildPlaceholder() {
-    return Container(
-      height: 100,
-      color: Colors.grey[300],
-      child: const Icon(Icons.directions_car, size: 40),
     );
   }
 }
