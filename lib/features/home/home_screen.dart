@@ -72,180 +72,225 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppConstants.homeTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppConstants.loginRoute);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.star),
-            tooltip: "My Reviews",
-            onPressed: () {
-              Navigator.pushNamed(context, AppConstants.myReviewsRoute);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.bus_alert),
-            tooltip: "My Rentals",
-            onPressed: () {
-              Navigator.pushNamed(context, AppConstants.myRentalsRoute);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            tooltip: "Profiel",
-            onPressed: () {
-              Navigator.pushNamed(context, AppConstants.profileRoute);
-            },
-          ),
-          if (context.watch<AuthService>().isAdmin)
-            IconButton(
-              icon: const Icon(Icons.account_circle),
-              tooltip: "Admin Paneel",
-              onPressed: () {
-                Navigator.pushNamed(context, AppConstants.adminDashboardRoute);
-              },
-            ),
-        ],
+        title: const Text(AppConstants.homeTitle)
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppConstants.defaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppConstants.welcomeMessage,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 12),
-            
-            // Top bar
-            Row(
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Filters
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  tooltip: "Filters",
-                  onPressed: () {
-                    _showFilterBottomSheet(context);
-                  },
+                Text(
+                  AppConstants.welcomeMessage,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                
-                // Sort
-                IconButton(
-                  icon: const Icon(Icons.sort),
-                  tooltip: "Sort",
-                  onPressed: () {
-                    _showSortBottomSheet(context);
-                  },
-                ),
-                
-                const SizedBox(width: 8),
-                
-                // Search bar
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      setState(() {
-                        _searchText = value;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Zoek auto's...",
-                      prefixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.grey.shade200,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                const SizedBox(height: 12),
+                // Top bar
+                Row(
+                  children: [
+                    // Filters
+                    IconButton(
+                      icon: const Icon(Icons.menu),
+                      tooltip: "Filters",
+                      onPressed: () {
+                        _showFilterBottomSheet(context);
+                      },
+                    ),
+
+                    // Sort
+                    IconButton(
+                      icon: const Icon(Icons.sort),
+                      tooltip: "Sort",
+                      onPressed: () {
+                        _showSortBottomSheet(context);
+                      },
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    // Search bar
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (value) {
+                          setState(() {
+                            _searchText = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Zoek auto's...",
+                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: Colors.grey.shade200,
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-            
-            const SizedBox(height: 12),
-            
-            Expanded(
-              child: Consumer<CarService>(
-                builder: (context, carService, child) {
-                  if (carService.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
 
-                  if (carService.error != null) {
-                    return Center(child: Text(carService.error!));
-                  }
+                const SizedBox(height: 12),
 
-                  if (carService.carList.isEmpty) {
-                    return const Center(child: Text('No cars available'));
-                  }
-
-                  final filteredCars = _filterCars(carService.carList);
-
-                  if (filteredCars.isEmpty) {
-                    return const Center(child: Text('No cars match your filters'));
-                  }
-
-                  return ListView.separated(
-                    controller: _scrollController,
-                    itemCount: filteredCars.length + (carService.hasMoreData && carService.isLoading && filteredCars.isNotEmpty ? 1 : 0),
-                    separatorBuilder: (context, index) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      if (index == filteredCars.length) {
-                        return const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Center(child: CircularProgressIndicator()),
-                        );
+                Expanded(
+                  child: Consumer<CarService>(
+                    builder: (context, carService, child) {
+                      if (carService.isLoading) {
+                        return const Center(
+                            child: CircularProgressIndicator());
                       }
-                      
-                      final car = filteredCars[index];
-                      final carData = {
-                        'id': car.id,
-                        'brand': car.brand,
-                        'model': car.model,
-                        'picture': car.picture,
-                        'price': car.price,
-                        'body': car.body.name,
-                        'year': car.modelYear,
-                        'options': car.options,
-                        'fuelType': car.fuel.name,
-                        'seats': car.nrOfSeats,
-                        'engineSize': car.engineSize.toString(),
-                        'licensePlate': car.licensePlate,
-                        'since': car.since,
-                      };
-                      return _buildRentalCarCard(
-                        context,
-                        carData: carData,
-                        imageUrl: car.picture,
-                        brand: car.brand,
-                        model: car.model,
-                        carType: car.body.name,
-                        distance: '2.5 km', // Calculate from lat/long
-                        price: '€${car.price}/day',
-                        onTap: () {
-                          Navigator.pushNamed(
+
+                      if (carService.error != null) {
+                        return Center(child: Text(carService.error!));
+                      }
+
+                      if (carService.carList.isEmpty) {
+                        return const Center(
+                            child: Text('No cars available'));
+                      }
+
+                      final filteredCars =
+                          _filterCars(carService.carList);
+
+                      if (filteredCars.isEmpty) {
+                        return const Center(
+                            child: Text('No cars match your filters'));
+                      }
+
+                      return ListView.separated(
+                        controller: _scrollController,
+                        itemCount: filteredCars.length +
+                            (carService.hasMoreData &&
+                                    carService.isLoading &&
+                                    filteredCars.isNotEmpty
+                                ? 1
+                                : 0),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          if (index == filteredCars.length) {
+                            return const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Center(
+                                  child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          final car = filteredCars[index];
+                          final carData = {
+                            'id': car.id,
+                            'brand': car.brand,
+                            'model': car.model,
+                            'picture': car.picture,
+                            'price': car.price,
+                            'body': car.body.name,
+                            'year': car.modelYear,
+                            'options': car.options,
+                            'fuelType': car.fuel.name,
+                            'seats': car.nrOfSeats,
+                            'engineSize': car.engineSize.toString(),
+                            'licensePlate': car.licensePlate,
+                            'since': car.since,
+                          };
+                          return _buildRentalCarCard(
                             context,
-                            AppConstants.carDetailsRoute,
-                            arguments: carData,
+                            carData: carData,
+                            imageUrl: car.picture,
+                            brand: car.brand,
+                            model: car.model,
+                            carType: car.body.name,
+                            distance: '2.5 km', // Calculate from lat/long
+                            price: '€${car.price}/day',
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppConstants.carDetailsRoute,
+                                arguments: carData,
+                              );
+                            },
                           );
                         },
                       );
                     },
-                  );
-                },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.logout),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, AppConstants.loginRoute);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.star),
+                    tooltip: "My Reviews",
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, AppConstants.myReviewsRoute);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.bus_alert),
+                    tooltip: "My Rentals",
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, AppConstants.myRentalsRoute);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.account_circle),
+                    tooltip: "Profiel",
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, AppConstants.profileRoute);
+                    },
+                  ),
+                  if (context.watch<AuthService>().isAdmin)
+                    IconButton(
+                      icon: const Icon(Icons.admin_panel_settings),
+                      tooltip: "Admin Paneel",
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, AppConstants.adminDashboardRoute);
+                      },
+                    ),
+                ],
               ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
+      bottomNavigationBar: null,
     );
   }
 
