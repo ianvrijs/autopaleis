@@ -27,7 +27,7 @@ class _MyRentalsPageState extends State<MyRentalsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Rentals"),
+        title: const Text("Mijn Rentals"),
       ),
       body: Consumer<RentalService>(
         builder: (context, rentalService, child) {
