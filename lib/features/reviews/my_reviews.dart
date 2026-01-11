@@ -45,9 +45,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Reviews"),
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        title: const Text("Mijn Reviews"),
       ),
       body: Column(
         children: [

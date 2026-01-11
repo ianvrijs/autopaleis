@@ -1,3 +1,4 @@
+import 'package:autopaleis/shared/services/favorites_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
@@ -66,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final carService = context.read<CarService>();
     final rentalService = context.read<RentalService>();
     final repairService = context.read<RepairService>();
+    final favoritesService = context.read<FavoritesService>();
 
     final success = await authService.loginWithGitHub();
 
@@ -74,6 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
         carService.setAuthToken(authService.token!);
         rentalService.setAuthToken(authService.token!);
         repairService.setAuthToken(authService.token!);
+        favoritesService.setAuthToken(authService.token!);
         Navigator.pushNamed(context, AppConstants.homeRoute);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

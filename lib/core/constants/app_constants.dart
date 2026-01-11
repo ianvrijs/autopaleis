@@ -16,6 +16,7 @@ class AppConstants {
   static const String userInfoRoute = '/userInfo';
   static const String editUserInfoRoute = '/edit_user_info';
   static const String carDetailsRoute = '/car_details';
+  static const String favoritesRoute = '/favorites';
 
   // Admin
   static const String adminDashboardRoute = '/admin';
