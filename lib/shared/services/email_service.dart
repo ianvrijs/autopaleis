@@ -1,5 +1,6 @@
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EmailService {
   // MailDev SMTP configuration
