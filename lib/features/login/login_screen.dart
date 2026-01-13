@@ -34,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final carService = context.read<CarService>();
       final rentalService = context.read<RentalService>();
       final repairService = context.read<RepairService>();
+      final favoritesService = context.read<FavoritesService>();
       
       final success = await authService.login(
         _usernameController.text,
@@ -45,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           carService.setAuthToken(authService.token!);
           rentalService.setAuthToken(authService.token!);
           repairService.setAuthToken(authService.token!);
+          favoritesService.setAuthToken(authService.token!);
           // Pushed home bovenop de screens stack. Dus als je op terug klikt ga je terug naar login
           Navigator.pushNamed(context, AppConstants.homeRoute);
 
