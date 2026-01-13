@@ -22,6 +22,8 @@ class AppConstants {
   static const String adminDashboardRoute = '/admin';
   static const String adminRentalsRoute = '/admin/rentals';
   static const String adminRepairsRoute = '/admin/repairs';
+  static const String adminDamagesRoute = '/admin/damages';
+
 
   // Validation
   static const int minPasswordLength = 4;
