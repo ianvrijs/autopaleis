@@ -15,7 +15,7 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  late Future<List<CarModel>> _favoriteCarsFuture;
+  Future<List<CarModel>>? _favoriteCarsFuture;
 
   @override
   void initState() {
@@ -24,13 +24,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   void _loadFavoriteCars() {
-    // Using addPostFrameCallback to ensure that the context is available
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final favoritesService = context.read<FavoritesService>();
-      final authService = context.read<AuthService>();
-      setState(() {
-        _favoriteCarsFuture = favoritesService.fetchFavoriteCars(authService.token!);
-      });
+    final favoritesService = context.read<FavoritesService>();
+    final authService = context.read<AuthService>();
+    setState(() {
+      _favoriteCarsFuture = favoritesService.fetchFavoriteCars(authService.token!);
     });
   }
 
