@@ -63,4 +63,26 @@ class EmailService {
       isHtml: true,
     );
   }
+
+  /// Send activation email
+  static Future<bool> sendActivationEmail(
+    String userEmail,
+  ) {
+    final activationLink = '${dotenv.env['API_BASE_URL']}/account/activate?email=$userEmail';
+    final htmlBody = '''
+      <h2>Welkom bij Danny's Autopaleis</h2>
+      <p>Uw account staat voor u klaar.. Alleen nog even op het linkje klikken.</p>
+      <p><a href="$activationLink">Activeer.</a></p>
+      <p>Gewoon klikken.</p>
+      <hr>
+      <p>Groetjes,<br>Danny & co</p>
+    ''';
+
+    return sendEmail(
+      recipientEmail: userEmail,
+      subject: "Welkom bij Danny's Autopaleis - Activeer uw account",
+      body: htmlBody,
+      isHtml: true,
+    );
+  }
 }
