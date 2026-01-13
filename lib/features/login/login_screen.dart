@@ -316,6 +316,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, AppConstants.registerRoute),
+                    child: const Text('Nog geen account? Registreren is gratis.'),
+                  ),
                 ],
               ),
             ),
