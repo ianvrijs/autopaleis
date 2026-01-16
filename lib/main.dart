@@ -7,6 +7,7 @@ import 'shared/services/auth_service.dart';
 import 'shared/services/rental_service.dart';
 import 'shared/services/repair_service.dart';
 import 'shared/services/favorites_service.dart';
+import 'shared/services/reviews_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => RentalService()),
         ChangeNotifierProvider(create: (_) => RepairService()),
         ChangeNotifierProvider(create: (_) => FavoritesService()),
+        ChangeNotifierProvider(create: (_) => ReviewsService()..loadReviews()),
       ],
       child: const MyApp(),
     ),
