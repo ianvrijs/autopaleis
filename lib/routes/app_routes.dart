@@ -1,3 +1,4 @@
+import 'package:autopaleis/features/register/register_screen.dart';
 import 'package:autopaleis/features/userInfo/userInfo.dart';
 import 'package:autopaleis/features/userInfo/edit_user_info.dart';
 import 'package:autopaleis/features/cars/car_details.dart';
@@ -22,6 +23,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     AppConstants.loginRoute: (context) => const LoginScreen(),
+    AppConstants.registerRoute: (context) => const RegisterScreen(),
     AppConstants.homeRoute: (context) => const Home(),
     AppConstants.myReviewsRoute: (context) => const MyReviewsPage(),
     AppConstants.myRentalsRoute: (context) => const MyRentalsPage(),
@@ -41,6 +43,8 @@ class AppRoutes {
     switch (settings.name) {
       case AppConstants.loginRoute:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case AppConstants.registerRoute:
+        return MaterialPageRoute(builder: (_) => const RegisterScreen());
       case AppConstants.homeRoute:
         return MaterialPageRoute(builder: (_) => const Home());
       case AppConstants.myReviewsRoute:

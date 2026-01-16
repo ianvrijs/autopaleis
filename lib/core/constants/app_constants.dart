@@ -8,6 +8,7 @@ class AppConstants {
   // Navigation
   static const String homeRoute = '/home';
   static const String loginRoute = '/login';
+  static const String registerRoute = '/register';
   static const String myReviewsRoute = '/my_reviews';
   static const String myRentalsRoute = '/my_rentals';
   static const String rentalDetailsRoute = '/rental-details';

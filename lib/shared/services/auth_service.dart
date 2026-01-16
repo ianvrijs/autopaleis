@@ -69,6 +69,51 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  Future<bool> register({
+    required String login,
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      var url = Uri.parse('${dotenv.env['API_BASE_URL']}/api/register');
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'login': login,
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+          'password': password,
+          'langKey': 'en',
+          'activated': true, //mag op true staan, activatie gaat via back-end
+          'authorities': ['ROLE_USER'],
+        }),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return true;
+      } else {
+        _error = 'Registration failed: ${response.body}';
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _error = 'Registration error: $e';
+      notifyListeners();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void logout() {
     _token = null;
     _currentUser = null;
