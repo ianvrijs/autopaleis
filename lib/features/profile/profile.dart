@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../shared/services/auth_service.dart';
+import '../../shared/services/locale_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mijn Profiel'),
+        title: Text(l10n.my_profile),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -22,7 +26,7 @@ class Profile extends StatelessWidget {
             // Main Menu Sections
             _buildMenuSection(
               context,
-              title: 'Mijn Boekingen',
+              title: l10n.my_rentals,
               icon: Icons.calendar_today,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.myRentalsRoute);
@@ -30,7 +34,7 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Favoriete Auto\'s',
+              title: l10n.favorite_cars,
               icon: Icons.favorite,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.favoritesRoute);
@@ -38,15 +42,63 @@ class Profile extends StatelessWidget {
             ),
             _buildMenuSection(
               context,
-              title: 'Accountgegevens',
+              title: l10n.account_details,
               icon: Icons.info,
               onTap: () {
                 Navigator.pushNamed(context, AppConstants.userInfoRoute);
               },
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Consumer<LocaleService>(
+                builder: (context, localeService, _) {
+                  final currentLocale = localeService.locale?.languageCode == 'nl' 
+                      ? const Locale('nl') 
+                      : const Locale('en');
+                      
+                  return ListTile(
+                    leading: Icon(
+                      Icons.language,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text(
+                      l10n.language,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    trailing: DropdownButtonHideUnderline(
+                      child: DropdownButton<Locale>(
+                        value: currentLocale,
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        onChanged: (Locale? newLocale) {
+                          if (newLocale != null) {
+                            localeService.setLocale(newLocale);
+                          }
+                        },
+                        items: [
+                          DropdownMenuItem(
+                            value: const Locale('en'),
+                            child: Text(l10n.english),
+                          ),
+                          DropdownMenuItem(
+                            value: const Locale('nl'),
+                            child: Text(l10n.dutch),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
             _buildMenuSection(
               context,
-              title: 'Afmelden',
+              title: l10n.logout,
               icon: Icons.logout,
               onTap: () {
                 _showLogoutDialog(context);
@@ -142,23 +194,25 @@ class Profile extends StatelessWidget {
   }
 
   void _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // Add this line
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Afmelden'),
-          content: const Text('Weet je zeker dat je wilt afmelden?'),
+          title: Text(l10n.logout), // Now l10n is available
+          content: Text(l10n.logout_confirmation),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Annuleren'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
                 context.read<AuthService>().logout();
                 Navigator.pushReplacementNamed(context, AppConstants.loginRoute);
               },
-              child: const Text('Afmelden', style: TextStyle(color: Colors.red)),
+              child: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
             ),
           ],
         );

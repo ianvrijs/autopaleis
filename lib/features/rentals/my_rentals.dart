@@ -4,6 +4,7 @@ import '../../shared/services/rental_service.dart';
 import '../../shared/models/rental_model.dart';
 import './rental_details_page.dart';
 import './report_damage_page.dart';
+import '../../l10n/app_localizations.dart';
 
 class MyRentalsPage extends StatefulWidget {
   const MyRentalsPage({super.key});
@@ -25,9 +26,11 @@ class _MyRentalsPageState extends State<MyRentalsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mijn Rentals"),
+        title: Text(l10n.my_rentals),
       ),
       body: Consumer<RentalService>(
         builder: (context, rentalService, child) {
@@ -58,7 +61,7 @@ class _MyRentalsPageState extends State<MyRentalsPage> {
                 child: TextField(
                   onChanged: (value) => setState(() => searchText = value),
                   decoration: InputDecoration(
-                    hintText: "Zoek in je rentals...",
+                    hintText: l10n.search_rentals_hint,
                     prefixIcon: const Icon(Icons.search),
                     filled: true,
                     fillColor: Colors.grey.shade200,
@@ -100,6 +103,7 @@ class RentalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final car = rental.car;
 
     return Card(
@@ -160,7 +164,7 @@ class RentalCard extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.warning_amber_rounded),
-                  label: const Text('Schade melden'),
+                  label: Text(l10n.report_damage),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.orange.shade700,
                     side: BorderSide(color: Colors.orange.shade700),

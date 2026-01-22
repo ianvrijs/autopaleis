@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../shared/services/rental_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AdminRentalsPage extends StatefulWidget {
   const AdminRentalsPage({super.key});
@@ -20,9 +21,10 @@ class _AdminRentalsPageState extends State<AdminRentalsPage> {
   @override
   Widget build(BuildContext context) {
     final rentalService = context.watch<RentalService>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Alle Rentals')),
+      appBar: AppBar(title: Text(l10n.all_rentals)),
       body: rentalService.isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -32,10 +34,10 @@ class _AdminRentalsPageState extends State<AdminRentalsPage> {
 
                 return ListTile(
                   leading: const Icon(Icons.car_rental),
-                  title: Text('Rental ${rental.code}'),
+                  title: Text('${l10n.rental} ${rental.code}'),
                   subtitle: Text(
-                    'Status: ${rental.state}\n'
-                    'Van ${rental.fromDate} tot ${rental.toDate}',
+                    '${l10n.status}: ${rental.state}\n'
+                    '${l10n.from_date_to_date(rental.fromDate.toString(), rental.toDate.toString())}',
                   ),
                   trailing: Icon(
                     rental.state == 'RESERVED'

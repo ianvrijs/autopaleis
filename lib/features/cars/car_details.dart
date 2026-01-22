@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import '../../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../shared/services/favorites_service.dart';
 
@@ -13,10 +14,11 @@ class CarDetails extends StatelessWidget {
     final favoritesService = context.watch<FavoritesService>();
     final carId = FavoritesService.getCarId(car);
     final isFavorite = favoritesService.isFavorite(carId);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Auto Details'),
+        title: Text(l10n.car_details),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -56,31 +58,31 @@ class CarDetails extends StatelessWidget {
                   // Overview Section
                   _buildSection(
                     context,
-                    title: 'Overzicht',
+                    title: l10n.overview,
                     items: [
-                      _InfoItem('Jaar', car['year']?.toString() ?? 'N/A'),
-                      _InfoItem('Opties', car['options'] ?? 'N/A'),
-                      _InfoItem('Brandstoftype', car['fuelType'] ?? 'N/A'),
-                      _InfoItem('Zitplaatsen', car['seats']?.toString() ?? 'N/A'),
+                      _InfoItem(l10n.year, car['year']?.toString() ?? l10n.na),
+                      _InfoItem(l10n.options, car['options'] ?? l10n.na),
+                      _InfoItem(l10n.fuel_type, car['fuelType'] ?? l10n.na),
+                      _InfoItem(l10n.seats, car['seats']?.toString() ?? l10n.na),
                     ],
                   ),
                   const SizedBox(height: 16),
                   // Features Section
                   _buildSection(
                     context,
-                    title: 'Kenmerken',
+                    title: l10n.features,
                     items: [
-                      _InfoItem('Carrosserietype', car['body'] ?? 'N/A'),
-                      _InfoItem('Motorinhoud', car['engineSize']?.toString() ?? 'N/A'),
-                      _InfoItem('Kenteken', car['licensePlate']?.toString() ?? 'N/A'),
+                      _InfoItem(l10n.body_type, car['body'] ?? l10n.na),
+                      _InfoItem(l10n.engine_size, car['engineSize']?.toString() ?? l10n.na),
+                      _InfoItem(l10n.license_plate, car['licensePlate']?.toString() ?? l10n.na),
                     ],
                   ),
                   const SizedBox(height: 16),
                   // Price and Book Button
-                  _buildPriceAndBook(context),
+                  _buildPriceAndBook(context, l10n),
                   const SizedBox(height: 16),
                   // Reviews Section
-                  _buildReviewsSection(context),
+                  _buildReviewsSection(context, l10n),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -193,19 +195,19 @@ class CarDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceAndBook(BuildContext context) {
+  Widget _buildPriceAndBook(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Prijs',
+          l10n.price,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 8),
         Text(
-          '€${car['price']}/dag',
+          l10n.price_per_day(car['price'].toString()),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
@@ -218,19 +220,19 @@ class CarDetails extends StatelessWidget {
             onPressed: () {
               // TODO: Navigate to booking page
             },
-            child: const Text('Boek Nu'),
+            child: Text(l10n.book_now),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildReviewsSection(BuildContext context) {
+  Widget _buildReviewsSection(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recente Beoordelingen',
+          l10n.recent_reviews,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -250,7 +252,7 @@ class CarDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Beoordeling',
+                    l10n.rating,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w600,
@@ -305,7 +307,7 @@ class CarDetails extends StatelessWidget {
             onPressed: () {
               // TODO: Load more reviews
             },
-            child: const Text('Meer beoordelingen laden'),
+            child: Text(l10n.load_more_reviews),
           ),
         ),
         const SizedBox(height: 8),
@@ -319,7 +321,7 @@ class CarDetails extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber,
             ),
-            child: const Text('Schrijf een beoordeling'),
+            child: Text(l10n.write_review),
           ),
         ),
       ],

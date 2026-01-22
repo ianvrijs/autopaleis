@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../shared/services/auth_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class UserInfo extends StatelessWidget {
   const UserInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accountgegevens'),
+        title: Text(l10n.account_details),
         elevation: 0,
       ),
       body: Consumer<AuthService>(
@@ -18,8 +20,8 @@ class UserInfo extends StatelessWidget {
           final user = authService.currentUser;
 
           if (user == null) {
-            return const Center(
-              child: Text('Geen gebruikersgegevens beschikbaar'),
+            return Center(
+              child: Text(l10n.no_user_data),
             );
           }
 
@@ -55,26 +57,26 @@ class UserInfo extends StatelessWidget {
                 // User Info Fields
                 _buildInfoSection(
                   context,
-                  label: 'Gebruikersnaam',
+                  label: l10n.username,
                   value: user.username,
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
                   context,
-                  label: 'E-mailadres',
+                  label: l10n.email_address,
                   value: user.email,
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
                   context,
-                  label: 'Voornaam',
-                  value: user.firstName ?? 'Niet ingesteld',
+                  label: l10n.first_name,
+                  value: user.firstName ?? l10n.not_set,
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
                   context,
-                  label: 'Achternaam',
-                  value: user.lastName ?? 'Niet ingesteld',
+                  label: l10n.last_name,
+                  value: user.lastName ?? l10n.not_set,
                 ),
                 const SizedBox(height: 32),
                 // Edit Button
@@ -84,7 +86,7 @@ class UserInfo extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, AppConstants.editUserInfoRoute);
                     },
-                    child: const Text('Profiel Bewerken'),
+                    child: Text(l10n.edit_profile),
                   ),
                 ),
               ],

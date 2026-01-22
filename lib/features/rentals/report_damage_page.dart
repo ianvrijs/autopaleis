@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../shared/services/repair_service.dart';
 import '../../shared/models/rental_model.dart';
 import '../../core/constants/app_constants.dart';
+import '../../l10n/app_localizations.dart';
 
 class ReportDamagePage extends StatefulWidget {
   final RentalModel rental;
@@ -24,10 +25,11 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
   }
 
   Future<void> _submitDamageReport() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_descriptionController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Er mist een beschrijving'),
+        SnackBar(
+          content: Text(l10n.description_missing),
           backgroundColor: Colors.red,
         ),
       );
@@ -48,8 +50,8 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Schade succesvol gemeld'),
+        SnackBar(
+          content: Text(l10n.damage_reported_success),
           backgroundColor: Colors.green,
         ),
       );
@@ -60,7 +62,7 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Kon schade niet indienen: $e'),
+          content: Text(l10n.damage_report_failed(e.toString())),
           backgroundColor: Colors.red,
         ),
       );
@@ -75,9 +77,10 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Schade melden'),
+        title: Text(l10n.report_damage),
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -96,7 +99,7 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Huurinformatie',
+                      l10n.rental_info,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -110,17 +113,17 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Kenteken: ${widget.rental.car.licensePlate}',
+                      '${l10n.license_plate}: ${widget.rental.car.licensePlate}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Huurperiode: ${widget.rental.fromDate} → ${widget.rental.toDate}',
+                      '${l10n.rental_period}: ${widget.rental.fromDate} → ${widget.rental.toDate}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Status: ${widget.rental.state.name.toUpperCase()}',
+                      '${l10n.status}: ${widget.rental.state.name.toUpperCase()}',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -135,7 +138,7 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
 
             // Damage Description
             Text(
-              'Schadebeschrijving',
+              l10n.damage_description,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -145,7 +148,7 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
               controller: _descriptionController,
               maxLines: 6,
               decoration: InputDecoration(
-                hintText: 'Beschrijf de schade in detail...',
+                hintText: l10n.describe_damage_hint,
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 border: OutlineInputBorder(
@@ -188,9 +191,9 @@ class _ReportDamagePageState extends State<ReportDamagePage> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Text(
-                        'Schade indienen',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    : Text(
+                        l10n.submit_damage,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
               ),
             ),

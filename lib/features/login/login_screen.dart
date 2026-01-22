@@ -1,6 +1,7 @@
 import 'package:autopaleis/shared/services/favorites_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/constants/app_constants.dart';
 import '../../shared/services/auth_service.dart';
 import '../../shared/services/car_service.dart';
@@ -30,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
+      final l10n = AppLocalizations.of(context)!;
       final authService = context.read<AuthService>();
       final carService = context.read<CarService>();
       final rentalService = context.read<RentalService>();
@@ -53,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(authService.error ?? 'Login failed'),
+              content: Text(authService.error ?? l10n.login_failed),
               backgroundColor: Colors.red,
             ),
           );
@@ -63,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleGitHubLogin() async {
+    final l10n = AppLocalizations.of(context)!;
     final authService = context.read<AuthService>();
     final carService = context.read<CarService>();
     final rentalService = context.read<RentalService>();
@@ -81,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authService.error ?? 'GitHub login failed'),
+            content: Text(authService.error ?? l10n.github_login_failed),
             backgroundColor: Colors.red,
           ),
         );
@@ -90,20 +93,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleForgotPassword() async {
+    final l10n = AppLocalizations.of(context)!;
     final emailController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Wachtwoord Opnieuw Instellen'),
+        title: Text(l10n.reset_password),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Wat is je e-mailadres? Dan zenden we je binnen enkele minuten een linkje om een nieuw wachtwoord in te stellen.'),
+            Text(l10n.whats_your_email),
             const SizedBox(height: 16),
             TextField(
               controller: emailController,
               decoration: InputDecoration(
-                labelText: 'E-mailadres',
+                labelText: l10n.email_address,
                 prefixIcon: const Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -116,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Annuleren'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -124,8 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
               
               if (email.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Voer uw e-mailadres in'),
+                  SnackBar(
+                    content: Text(l10n.please_enter_email),
                     backgroundColor: Colors.orange,
                   ),
                 );
@@ -134,8 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
               if (!email.contains('@')) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Voer een geldig e-mailadres in'),
+                  SnackBar(
+                    content: Text(l10n.please_enter_valid_email),
                     backgroundColor: Colors.orange,
                   ),
                 );
@@ -156,22 +160,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('E-mail voor wachtwoordherstel verzonden! Controleer uw inbox.'),
+                    SnackBar(
+                      content: Text(l10n.password_reset_sent),
                       backgroundColor: Colors.green,
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Het verzenden van de herstel-e-mail is mislukt. Probeer het opnieuw.'),
+                    SnackBar(
+                      content: Text(l10n.password_reset_failed),
                       backgroundColor: Colors.red,
                     ),
                   );
                 }
               }
             },
-            child: const Text('Verzenden'),
+            child: Text(l10n.send),
           ),
         ],
       ),
@@ -180,6 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -204,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Your automotive companion',
+                    l10n.automotive_companion,
                     textAlign: TextAlign.center,
                     style: Theme.of(
                       context,
@@ -213,13 +219,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 48),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      prefixIcon: Icon(Icons.person),
+                    decoration: InputDecoration(
+                      labelText: l10n.username,
+                      prefixIcon: const Icon(Icons.person),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
+                        return l10n.please_enter_username;
                       }
                       return null;
                     },
@@ -229,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: l10n.password,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -244,10 +250,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return l10n.please_enter_password;
                       }
                       if (value.length < AppConstants.minPasswordLength) {
-                        return 'Password must be at least ${AppConstants.minPasswordLength} characters';
+                        return l10n.password_min_length(AppConstants.minPasswordLength);
                       }
                       return null;
                     },
@@ -268,14 +274,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               )
-                            : const Text('Login'),
+                            : Text(l10n.login),
                       );
                     },
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: _handleForgotPassword,
-                    child: const Text('Forgot Password?'),
+                    child: Text(l10n.forgot_password),
                   ),
                   const SizedBox(height: 24),
                   Row(
@@ -284,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          'OR',
+                          l10n.or,
                           style: Theme.of(
                             context,
                           ).textTheme.bodySmall?.copyWith(color: Colors.grey),
@@ -309,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               )
                             : const Icon(Icons.code),
-                        label: const Text('Continue with GitHub'),
+                        label: Text(l10n.continue_with_github),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),

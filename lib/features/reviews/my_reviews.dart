@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 class MyReviewsPage extends StatefulWidget {
   const MyReviewsPage({super.key});
@@ -36,6 +37,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Filter reviews op basis van search
     final filteredReviews = reviews.where((r) {
       final query = searchText.toLowerCase();
@@ -45,7 +47,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mijn Reviews"),
+        title: Text(l10n.my_reviews),
       ),
       body: Column(
         children: [
@@ -60,7 +62,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
                 });
               },
               decoration: InputDecoration(
-                hintText: "Zoek in je reviews...",
+                hintText: l10n.search_reviews_hint,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.grey.shade200,
