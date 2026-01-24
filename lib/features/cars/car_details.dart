@@ -1,3 +1,4 @@
+import 'package:autopaleis/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
@@ -216,7 +217,7 @@ class CarDetails extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // TODO: Navigate to booking page
+              Navigator.pushNamed(context, AppConstants.bookingRoute, arguments: car['id']);
             },
             child: const Text('Boek Nu'),
           ),

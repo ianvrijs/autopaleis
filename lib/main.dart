@@ -1,3 +1,4 @@
+import 'package:autopaleis/shared/models/ride_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => RentalService()),
         ChangeNotifierProvider(create: (_) => RepairService()),
         ChangeNotifierProvider(create: (_) => FavoritesService()),
+        ChangeNotifierProvider(create: (_) => Ride()),
       ],
       child: const MyApp(),
     ),
