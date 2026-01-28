@@ -8,6 +8,7 @@ import 'shared/services/auth_service.dart';
 import 'shared/services/rental_service.dart';
 import 'shared/services/repair_service.dart';
 import 'shared/services/favorites_service.dart';
+import 'shared/services/locale_service.dart';
 import 'shared/services/reviews_service.dart';
 
 Future<void> main() async {
@@ -21,6 +22,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => RentalService()),
         ChangeNotifierProvider(create: (_) => RepairService()),
         ChangeNotifierProvider(create: (_) => FavoritesService()),
+        ChangeNotifierProvider(create: (_) => LocaleService()),
         ChangeNotifierProvider(create: (_) => Ride()),
         ChangeNotifierProvider(create: (_) => ReviewsService()..loadReviews()),
       ],

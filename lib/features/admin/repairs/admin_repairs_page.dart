@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../shared/services/auth_service.dart';
 import '../../../shared/services/repair_service.dart';
 import '../../../shared/models/repair_model.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AdminRepairsPage extends StatefulWidget {
   const AdminRepairsPage({super.key});
@@ -23,6 +24,8 @@ class _AdminRepairsPageState extends State<AdminRepairsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (!context.watch<AuthService>().isAdmin) {
       return const Scaffold(
         body: Center(child: Text('Geen toegang')),
@@ -31,7 +34,7 @@ class _AdminRepairsPageState extends State<AdminRepairsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Repairs Overzicht'),
+        title: Text(l10n.repairs_overview),
       ),
       body: Consumer<RepairService>(
         builder: (context, repairService, _) {
@@ -44,7 +47,7 @@ class _AdminRepairsPageState extends State<AdminRepairsPage> {
           }
 
           if (repairService.repairs.isEmpty) {
-            return const Center(child: Text('Geen reparaties gevonden'));
+            return Center(child: Text(l10n.no_repairs_found));
           }
 
           return ListView.separated(
@@ -64,12 +67,12 @@ class _AdminRepairsPageState extends State<AdminRepairsPage> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Kenteken: ${repair.car?.licensePlate ?? '—'}'),
-                      Text('Monteur: ${repair.employee?.fullName ?? 'Niet toegewezen'}'),
-                      Text('Status: ${_statusText(repair.status)}'),
+                      Text('${l10n.license_plate}: ${repair.car?.licensePlate ?? '—'}'),
+                      Text('${l10n.mechanic}: ${repair.employee?.fullName ?? l10n.not_assigned}'),
+                      Text('${l10n.status}: ${_statusText(repair.status, l10n)}'), // reused status
                       if (repair.dateCompleted != null)
                         Text(
-                          'Voltooid: ${repair.dateCompleted!.toLocal().toString().split(' ')[0]}',
+                          '${l10n.completed}: ${repair.dateCompleted!.toLocal().toString().split(' ')[0]}',
                         ),
                     ],
                   ),
@@ -100,18 +103,18 @@ class _AdminRepairsPageState extends State<AdminRepairsPage> {
     }
   }
 
-  String _statusText(RepairStatus status) {
+  String _statusText(RepairStatus status, AppLocalizations l10n) {
     switch (status) {
       case RepairStatus.planned:
-        return 'PLANNED';
+        return l10n.status_planned;
       case RepairStatus.doing:
-        return 'DOING';
+        return l10n.status_doing;
       case RepairStatus.done:
-        return 'DONE';
+        return l10n.status_done; // Or reuse l10n.completed if you want
       case RepairStatus.unknown:
-        return 'UNKNOWN';
+        return l10n.status_unknown;
       case RepairStatus.cancelled:
-        return 'CANCELLED';
+        return l10n.status_cancelled;
     }
   }
 }

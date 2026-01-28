@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/services/auth_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class EditUserInfo extends StatefulWidget {
   const EditUserInfo({super.key});
@@ -44,7 +45,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
     ).then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profiel succesvol bijgewerkt')),
+           SnackBar(content: Text(AppLocalizations.of(context)!.profile_updated_success)),
         );
         Navigator.pop(context);
       } else {
@@ -63,9 +64,10 @@ class _EditUserInfoState extends State<EditUserInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profiel Bewerken'),
+        title: Text(l10n.edit_profile),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -88,7 +90,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             const SizedBox(height: 32),
             // First Name Field
             Text(
-              'Voornaam',
+              l10n.first_name,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -97,7 +99,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             TextField(
               controller: _firstNameController,
               decoration: InputDecoration(
-                hintText: 'Voornaam invoeren',
+                hintText: l10n.enter_first_name,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -106,7 +108,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             const SizedBox(height: 20),
             // Last Name Field
             Text(
-              'Achternaam',
+              l10n.last_name,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -115,7 +117,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             TextField(
               controller: _lastNameController,
               decoration: InputDecoration(
-                hintText: 'Achternaam invoeren',
+                hintText: l10n.enter_last_name,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -124,7 +126,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             const SizedBox(height: 20),
             // Email Field
             Text(
-              'E-mailadres',
+              l10n.email_address,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -133,7 +135,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                hintText: 'E-mailadres invoeren',
+                hintText: l10n.please_enter_email,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -151,7 +153,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Wijzigingen Opslaan'),
+                    : Text(l10n.save_changes),
               ),
             ),
             const SizedBox(height: 16),
@@ -160,7 +162,7 @@ class _EditUserInfoState extends State<EditUserInfo> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Annuleren'),
+                child: Text(l10n.cancel),
               ),
             ),
           ],

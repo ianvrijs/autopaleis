@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/services/rental_service.dart';
 import '../../shared/models/rental_model.dart';
+import '../../l10n/app_localizations.dart';
 
 class RentalDetailsPage extends StatefulWidget {
   final int rentalId;
@@ -40,16 +41,18 @@ class _RentalDetailsPageState extends State<RentalDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (loading) {
       return Scaffold(
-        appBar: AppBar(title: const Text("Rental Details")),
+        appBar: AppBar(title: Text(l10n.rental_details)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (error != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text("Rental Details")),
+        appBar: AppBar(title: Text(l10n.rental_details)),
         body: Center(child: Text(error!)),
       );
     }
@@ -64,53 +67,53 @@ class _RentalDetailsPageState extends State<RentalDetailsPage> {
         children: [
           // CAR
           _section(
-            title: "Car",
+            title: l10n.car,
             children: [
-              Text("Merk: ${r.car.brand}"),
-              Text("Model: ${r.car.model}"),
-              Text("Brandstof: ${r.car.fuel}"),
-              Text("Jaar: ${r.car.modelYear}"),
-              Text("Zitplaatsen: ${r.car.nrOfSeats}"),
-              Text("Nummerbord: ${r.car.licensePlate}"),
+              Text("${l10n.brand}: ${r.car.brand}"),
+              Text("${l10n.model}: ${r.car.model}"),
+              Text("${l10n.fuel_type}: ${r.car.fuel}"),
+              Text("${l10n.year}: ${r.car.modelYear}"),
+              Text("${l10n.seats}: ${r.car.nrOfSeats}"),
+              Text("${l10n.license_plate}: ${r.car.licensePlate}"),
             ],
           ),
 
           // RENTAL INFO
           _section(
-            title: "Rental",
+            title: l10n.rental,
             children: [
-              Text("Van: ${r.fromDate}"),
-              Text("Tot: ${r.toDate}"),
-              Text("Staat: ${r.state}"),
+              Text("${l10n.from}: ${r.fromDate}"),
+              Text("${l10n.to}: ${r.toDate}"),
+              Text("${l10n.status}: ${r.state}"),
               Text("Code: ${r.code}"),
-              Text("Coördinaten: ${r.longitude}, ${r.latitude}"),
+              Text("${l10n.coordinates}: ${r.longitude}, ${r.latitude}"),
             ],
           ),
 
           // CUSTOMER
           _section(
-            title: "Customer",
+            title: l10n.customer,
             children: [
-              Text("Naam: ${r.customer.firstName} ${r.customer.lastName}"),
-              Text("Klant Nr: ${r.customer.nr}"),
-              Text("Klant sinds: ${r.customer.from}"),
+              Text("${l10n.name}: ${r.customer.firstName} ${r.customer.lastName}"),
+              Text("${l10n.customer_nr}: ${r.customer.nr}"),
+              Text("${l10n.customer_since}: ${r.customer.from}"),
             ],
           ),
 
           // INSPECTIONS
           _section(
-            title: "Inspections",
+            title: l10n.inspections,
             children: r.inspections.map((ins) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Inspectie Code: ${ins.code}"),
-                    Text("Kilometerteller: ${ins.odometer}"),
-                    Text("Resultaat: ${ins.result}"),
-                    Text("Omschrijving: ${ins.description}"),
-                    Text("Voltooid: ${ins.completed}"),
+                    Text("${l10n.inspection_code}: ${ins.code}"),
+                    Text("${l10n.odometer}: ${ins.odometer}"),
+                    Text("${l10n.result}: ${ins.result}"),
+                    Text("${l10n.description}: ${ins.description}"),
+                    Text("${l10n.completed}: ${ins.completed}"),
                   ],
                 ),
               );

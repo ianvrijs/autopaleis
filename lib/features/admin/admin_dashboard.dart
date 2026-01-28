@@ -2,6 +2,7 @@
 
 import 'package:autopaleis/shared/services/repair_service.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../shared/services/auth_service.dart';
@@ -11,6 +12,8 @@ class AdminDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final repairService = context.read<RepairService>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -18,32 +21,32 @@ class AdminDashboard extends StatelessWidget {
       });
       
     if (!context.watch<AuthService>().isAdmin) {
-      return const Scaffold(
-        body: Center(child: Text('Geen toegang')),
+      return Scaffold(
+        body: Center(child: Text(l10n.no_access)),
       );
     }
     
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin Paneel')),
+      appBar: AppBar(title: Text(l10n.admin_panel)),
       body: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
         child: GridView.count(
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          children: const [
+          children:  [
             _AdminCard(
-              title: 'Rentals',
+              title: l10n.rentals,
               icon: Icons.car_rental,
               route: '/admin/rentals',
             ),
             _AdminCard(
-              title: 'Reparaties',
+              title: l10n.repairs,
               icon: Icons.build,
               route: '/admin/repairs',
             ),
             _AdminCard(
-              title: 'Schademeldingen',
+              title: l10n.damage_reports,
               icon: Icons.report_problem,
               route: '/admin/damages',
             ),

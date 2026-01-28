@@ -6,6 +6,7 @@ import '../../shared/models/car_model.dart';
 import '../../shared/services/auth_service.dart';
 import '../../shared/services/favorites_service.dart';
 import '../../shared/widgets/car_card.dart';
+import '../../l10n/app_localizations.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -33,9 +34,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favoriete Auto\'s'),
+        title: Text(l10n.favorite_cars),
       ),
       body: FutureBuilder<List<CarModel>>(
         future: _favoriteCarsFuture,
@@ -45,13 +48,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Fout bij het laden van favorieten: ${snapshot.error}'));
+            return Center(child: Text(l10n.error_loading_favorites(snapshot.error.toString())));
           }
 
           final favoriteCars = snapshot.data;
 
           if (favoriteCars == null || favoriteCars.isEmpty) {
-            return const Center(child: Text('Je hebt nog geen favoriete auto\'s.'));
+            return Center(child: Text(l10n.no_favorites_yet));
           }
 
           return ListView.separated(

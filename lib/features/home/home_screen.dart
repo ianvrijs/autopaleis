@@ -7,6 +7,7 @@ import 'package:autopaleis/shared/models/car_model.dart';
 import '../../shared/services/auth_service.dart';
 import '../../shared/services/favorites_service.dart';
 import '../../shared/widgets/car_card.dart';
+import '../../l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -70,6 +71,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppConstants.homeTitle)
@@ -92,7 +95,7 @@ class _HomeState extends State<Home> {
                     // Filters
                     IconButton(
                       icon: const Icon(Icons.menu),
-                      tooltip: "Filters",
+                      tooltip: l10n.filters,
                       onPressed: () {
                         _showFilterBottomSheet(context);
                       },
@@ -101,7 +104,7 @@ class _HomeState extends State<Home> {
                     // Sort
                     IconButton(
                       icon: const Icon(Icons.sort),
-                      tooltip: "Sort",
+                      tooltip: l10n.sort,
                       onPressed: () {
                         _showSortBottomSheet(context);
                       },
@@ -119,7 +122,7 @@ class _HomeState extends State<Home> {
                           });
                         },
                         decoration: InputDecoration(
-                          hintText: "Zoek auto's...",
+                          hintText: l10n.search_cars_hint,
                           prefixIcon: const Icon(Icons.search),
                           filled: true,
                           fillColor: Colors.grey.shade200,
@@ -150,16 +153,14 @@ class _HomeState extends State<Home> {
                       }
 
                       if (carService.carList.isEmpty) {
-                        return const Center(
-                            child: Text('No cars available'));
+                        return Center(child: Text(l10n.no_cars_available));
                       }
 
                       final filteredCars =
                           _filterCars(carService.carList);
 
                       if (filteredCars.isEmpty) {
-                        return const Center(
-                            child: Text('No cars match your filters'));
+                        return Center(child: Text(l10n.no_cars_match));
                       }
 
                       return ListView.separated(
@@ -223,7 +224,7 @@ class _HomeState extends State<Home> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.star),
-                    tooltip: "My Reviews",
+                    tooltip: l10n.my_reviews,
                     onPressed: () {
                       Navigator.pushNamed(
                           context, AppConstants.myReviewsRoute);
@@ -231,7 +232,7 @@ class _HomeState extends State<Home> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.bus_alert),
-                    tooltip: "My Rentals",
+                    tooltip: l10n.my_rentals,
                     onPressed: () {
                       Navigator.pushNamed(
                           context, AppConstants.myRentalsRoute);
@@ -239,7 +240,7 @@ class _HomeState extends State<Home> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.account_circle),
-                    tooltip: "Profiel",
+                    tooltip: l10n.my_profile,
                     onPressed: () {
                       Navigator.pushNamed(
                           context, AppConstants.profileRoute);
@@ -248,7 +249,7 @@ class _HomeState extends State<Home> {
                   if (context.watch<AuthService>().isAdmin)
                     IconButton(
                       icon: const Icon(Icons.admin_panel_settings),
-                      tooltip: "Admin Paneel",
+                      tooltip: l10n.admin_panel,
                       onPressed: () {
                         Navigator.pushNamed(
                             context, AppConstants.adminDashboardRoute);
@@ -265,6 +266,7 @@ class _HomeState extends State<Home> {
   }
 
   void _showFilterBottomSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -299,10 +301,7 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 16),
                   
-                  const Text(
-                    'Body Type',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+                  Text(l10n.body_type_label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -328,10 +327,7 @@ class _HomeState extends State<Home> {
                   
                   const SizedBox(height: 16),
                   
-                  const Text(
-                    'Fuel Type',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+                  Text(l10n.fuel_type_label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -369,7 +365,7 @@ class _HomeState extends State<Home> {
                               });
                               setModalState(() {});
                             },
-                            child: const Text('Clear All'),
+                            child: Text(l10n.clear_all),
                           ),
                         ),
                       if (_selectedBodyTypes.isNotEmpty || _selectedFuelTypes.isNotEmpty)
@@ -377,7 +373,7 @@ class _HomeState extends State<Home> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text('Apply'),
+                          child: Text(l10n.apply),
                         ),
                       ),
                     ],
@@ -539,8 +535,8 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            );
-          },
+          );
+            },
         );
       },
     );
