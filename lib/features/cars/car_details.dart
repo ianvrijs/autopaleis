@@ -2,7 +2,6 @@ import 'package:autopaleis/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../../l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/services/favorites_service.dart';
@@ -17,11 +16,9 @@ class CarDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favoritesService = context.watch<FavoritesService>();
-    final reviewsService = context.watch<ReviewsService>();
 
     final carId = FavoritesService.getCarId(car);
     final isFavorite = favoritesService.isFavorite(carId);
-    final reviews = reviewsService.getReviews(carId);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -227,6 +224,12 @@ class CarDetails extends StatelessWidget {
   }
 
   Widget _buildReviewsSection(BuildContext context, AppLocalizations l10n) {
+    // final favoritesService = context.watch<FavoritesService>();
+    final reviewsService = context.watch<ReviewsService>();
+
+    final carId = FavoritesService.getCarId(car);
+    final reviews = reviewsService.getReviews(carId);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -238,85 +241,35 @@ class CarDetails extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         // Rating Bar
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[300]!),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10n.rating,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  Row(
-                    children: List.generate(5, (index) {
-                      return Icon(
-                        Icons.star,
-                        size: 16,
-                        color: index < 4 ? Colors.amber : Colors.grey[300],
-                      );
-                    }),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              LinearProgressIndicator(
-                value: 0.8,
-                minHeight: 6,
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
+
         // Review Items
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[300]!),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            children: [
-              _buildReviewItem(context, 'John Doe', '2024-01-15', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-              const SizedBox(height: 8),
-              _buildReviewItem(context, 'Jane Smith', '2024-01-10', 'Geweldige auto, erg comfortabel en betrouwbaar. Zeer aanbevolen!'),
-              const SizedBox(height: 8),
-              _buildReviewItem(context, 'Mike Johnson', '2024-01-05', 'Geweldige ervaring. De auto is in perfecte staat.'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
+        if (!reviews.isEmpty)
+          ...reviews.map((review) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildReviewItem(context, review),
+              )),
+
+        const SizedBox(height: 12),
+        
         // Load More Button
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () {
-              // TODO: Load more reviews
-            },
-            child: Text(l10n.load_more_reviews),
+        if (!reviews.isEmpty)
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () {
+                // TODO: Load more reviews
+              },
+              child: Text(l10n.load_more_reviews),
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
+
+        const SizedBox(height: 12),
+
         // Write Review Button
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              // TODO: Navigate to write review page
-            },
+            onPressed: () => _showAddReviewDialog(context, carId),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber,
             ),
