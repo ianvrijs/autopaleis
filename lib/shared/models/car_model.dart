@@ -57,22 +57,23 @@ class CarModel {
 
   factory CarModel.fromJson(Map<String, dynamic> json) {
     return CarModel(
-        id: json['id'] as int,
-        brand: json['brand'] as String,
-        model: json['model'] as String,
-        picture: json['picture'] as String,
-        pictureContentType: json['pictureContentType'] as String,
-        fuel: _parseFuelType(json['fuel'] as String),
-        options: json['options'] as String,
-        licensePlate: json['licensePlate'] as String,
-        engineSize: json['engineSize'] as int,
-        modelYear: json['modelYear'] as int,
-        since: json['since'] as String,
-        price: json['price'] as double,
-        nrOfSeats: json['nrOfSeats'] as int,
-        body: _parseBodyType(json['body'] as String),
-        longitude: json['longitude'] as double,
-        latitude: json['latitude'] as double);
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      brand: json['brand'] as String? ?? 'N/A',
+      model: json['model'] as String? ?? 'N/A',
+      picture: json['picture'] as String? ?? '',
+      pictureContentType: json['pictureContentType'] as String? ?? '',
+      fuel: json['fuel'] != null ? _parseFuelType(json['fuel'] as String) : FuelType.gasoline,
+      options: json['options'] as String? ?? '',
+      licensePlate: json['licensePlate'] as String? ?? 'N/A',
+      engineSize: (json['engineSize'] as num?)?.toInt() ?? 0,
+      modelYear: (json['modelYear'] as num?)?.toInt() ?? 2000,
+      since: json['since'] as String? ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      nrOfSeats: (json['nrOfSeats'] as num?)?.toInt() ?? 0,
+      body: json['body'] != null ? _parseBodyType(json['body'] as String) : BodyType.sedan,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0
+    );
   }
 
   static FuelType _parseFuelType(String value) {

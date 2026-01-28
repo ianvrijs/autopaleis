@@ -1,3 +1,5 @@
+import 'package:autopaleis/core/constants/app_constants.dart';
+import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -210,6 +212,16 @@ class CarDetails extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
               ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AppConstants.bookingRoute, arguments: car['id']);
+            },
+            child: const Text('Boek Nu'),
+          ),
         ),
       ],
     );

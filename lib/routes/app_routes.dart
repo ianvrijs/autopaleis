@@ -1,4 +1,6 @@
+import 'package:autopaleis/features/booking/booking_screen.dart';
 import 'package:autopaleis/features/register/register_screen.dart';
+import 'package:autopaleis/features/ride/active_ride_screen.dart';
 import 'package:autopaleis/features/userInfo/userInfo.dart';
 import 'package:autopaleis/features/userInfo/edit_user_info.dart';
 import 'package:autopaleis/features/cars/car_details.dart';
@@ -36,6 +38,8 @@ class AppRoutes {
     AppConstants.adminDamagesRoute: (_) => const AdminDamagesPage(),
     AppConstants.adminRepairsRoute: (_) => const AdminRepairsPage(),
     AppConstants.favoritesRoute: (context) => const FavoritesScreen(),
+    AppConstants.bookingRoute: (context) => const BookingScreen(),
+    AppConstants.activeRideRoute: (context) => const ActiveRideScreen(),
     // '/admin/damages': (_) => const AdminDamagesPage(),
   };
 
@@ -64,6 +68,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const EditUserInfo());
       case AppConstants.favoritesRoute:
         return MaterialPageRoute(builder: (_) => const FavoritesScreen());
+      case AppConstants.bookingRoute:
+        return MaterialPageRoute(builder: (_) => const BookingScreen());
+      case AppConstants.activeRideRoute:
+        return MaterialPageRoute(builder: (_) => const ActiveRideScreen());
       case AppConstants.carDetailsRoute:
         if (settings.arguments is Map<String, dynamic>) {
           return MaterialPageRoute(
