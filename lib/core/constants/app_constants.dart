@@ -8,6 +8,7 @@ class AppConstants {
   // Navigation
   static const String homeRoute = '/home';
   static const String loginRoute = '/login';
+  static const String registerRoute = '/register';
   static const String myReviewsRoute = '/my_reviews';
   static const String myRentalsRoute = '/my_rentals';
   static const String rentalDetailsRoute = '/rental-details';
@@ -17,11 +18,15 @@ class AppConstants {
   static const String editUserInfoRoute = '/edit_user_info';
   static const String carDetailsRoute = '/car_details';
   static const String favoritesRoute = '/favorites';
+  static const String bookingRoute = '/booking';
+  static const String activeRideRoute = '/active_ride';
 
   // Admin
   static const String adminDashboardRoute = '/admin';
   static const String adminRentalsRoute = '/admin/rentals';
   static const String adminRepairsRoute = '/admin/repairs';
+  static const String adminDamagesRoute = '/admin/damages';
+
 
   // Validation
   static const int minPasswordLength = 4;

@@ -1,3 +1,6 @@
+
+
+import 'package:autopaleis/shared/services/repair_service.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +14,12 @@ class AdminDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    final repairService = context.read<RepairService>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+        repairService.fetchRepairs();
+      });
+      
     if (!context.watch<AuthService>().isAdmin) {
       return Scaffold(
         body: Center(child: Text(l10n.no_access)),

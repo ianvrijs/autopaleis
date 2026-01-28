@@ -78,4 +78,34 @@ class RepairService with ChangeNotifier {
       throw Exception('Error creating repair: $e');
     }
   }
+
+Future<void> markRepairAsDone(int repairId) async {
+  try {
+    final url = Uri.parse(
+      '${dotenv.env['API_BASE_URL']}/api/repairs/$repairId',
+    );
+
+    final response = await http.patch(
+      url,
+      headers: {
+        'Authorization': 'Bearer $_token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'id': repairId, // 🔥 VERPLICHT
+        'repairStatus': 'DONE',
+        'dateCompleted': DateTime.now().toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      await fetchRepairs();
+    } else {
+      throw Exception('Failed to update repair (${response.statusCode})');
+    }
+  } catch (e) {
+    throw Exception('Error updating repair: $e');
+  }
+}
+
 }

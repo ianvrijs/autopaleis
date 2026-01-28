@@ -1,8 +1,13 @@
+import 'package:autopaleis/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../../l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../shared/services/favorites_service.dart';
+import '../../shared/services/reviews_service.dart';
+import '../../shared/models/review_model.dart';
 
 class CarDetails extends StatelessWidget {
   final Map<String, dynamic> car;
@@ -12,8 +17,11 @@ class CarDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favoritesService = context.watch<FavoritesService>();
+    final reviewsService = context.watch<ReviewsService>();
+
     final carId = FavoritesService.getCarId(car);
     final isFavorite = favoritesService.isFavorite(carId);
+    final reviews = reviewsService.getReviews(carId);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -25,22 +33,22 @@ class CarDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Car Image
             _buildCarImage(car['picture'] ?? ''),
             const SizedBox(height: 16),
-            // Car Info
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Brand and Model with Favorite Icon
+                  /// Titel + favoriet
                   Row(
                     children: [
                       Expanded(
                         child: Text(
                           '${car['brand']} ${car['model']}',
-                          style: Theme.of(context).textTheme.headlineSmall
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -50,12 +58,14 @@ class CarDetails extends StatelessWidget {
                           color: Colors.amber,
                           size: 32,
                         ),
-                        onPressed: () => favoritesService.toggleFavorite(carId),
+                        onPressed: () =>
+                            favoritesService.toggleFavorite(carId),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 16),
-                  // Overview Section
+
                   _buildSection(
                     context,
                     title: l10n.overview,
@@ -66,8 +76,9 @@ class CarDetails extends StatelessWidget {
                       _InfoItem(l10n.seats, car['seats']?.toString() ?? l10n.na),
                     ],
                   ),
+
                   const SizedBox(height: 16),
-                  // Features Section
+
                   _buildSection(
                     context,
                     title: l10n.features,
@@ -77,6 +88,7 @@ class CarDetails extends StatelessWidget {
                       _InfoItem(l10n.license_plate, car['licensePlate']?.toString() ?? l10n.na),
                     ],
                   ),
+
                   const SizedBox(height: 16),
                   // Price and Book Button
                   _buildPriceAndBook(context, l10n),
@@ -95,37 +107,28 @@ class CarDetails extends StatelessWidget {
 
   Widget _buildCarImage(String imageData) {
     try {
-      String base64String = imageData;
-      if (imageData.contains(',')) {
-        base64String = imageData.split(',')[1];
-      }
-
+      final base64String =
+          imageData.contains(',') ? imageData.split(',')[1] : imageData;
       final bytes = base64.decode(base64String);
-      return ClipRRect(
-        child: Container(
-          height: 250,
-          color: Colors.grey[300],
-          child: Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: 250,
-                color: Colors.grey[300],
-                child: const Icon(Icons.directions_car, size: 80),
-              );
-            },
-          ),
-        ),
-      );
-    } catch (e) {
-      return Container(
+
+      return Image.memory(
+        bytes,
         height: 250,
-        color: Colors.grey[300],
-        child: const Icon(Icons.directions_car, size: 80),
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _imageFallback(),
       );
+    } catch (_) {
+      return _imageFallback();
     }
+  }
+
+  Widget _imageFallback() {
+    return Container(
+      height: 250,
+      color: Colors.grey[300],
+      child: const Icon(Icons.directions_car, size: 80),
+    );
   }
 
   Widget _buildSection(
@@ -136,13 +139,12 @@ class CarDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 12),
+        Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -152,16 +154,15 @@ class CarDetails extends StatelessWidget {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 2.8,
+              childAspectRatio: 3,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
             ),
             itemCount: items.length,
-            itemBuilder: (context, index) {
-              return _buildInfoItem(context, items[index]);
-            },
+            itemBuilder: (_, i) => _buildInfoItem(context, items[i]),
           ),
         ),
       ],
@@ -171,23 +172,21 @@ class CarDetails extends StatelessWidget {
   Widget _buildInfoItem(BuildContext context, _InfoItem item) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           item.label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-              ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: Colors.grey[600]),
         ),
         const SizedBox(height: 2),
         Text(
           item.value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -218,7 +217,7 @@ class CarDetails extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // TODO: Navigate to booking page
+              Navigator.pushNamed(context, AppConstants.bookingRoute, arguments: car['id']);
             },
             child: Text(l10n.book_now),
           ),
@@ -328,50 +327,104 @@ class CarDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewItem(
-    BuildContext context,
-    String name,
-    String date,
-    String reviewText,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              name,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            Text(
-              date,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
+  Widget _buildReviewItem(BuildContext context, ReviewModel review) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(review.author,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                review.date.toString().split(' ').first,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: List.generate(5, (i) {
+              return Icon(
+                Icons.star,
+                size: 14,
+                color: i < review.rating
+                    ? Colors.amber
+                    : Colors.grey[300],
+              );
+            }),
+          ),
+          const SizedBox(height: 8),
+          Text(review.comment),
+        ],
+      ),
+    );
+  }
+
+  void _showAddReviewDialog(BuildContext context, String carId) {
+    final commentController = TextEditingController();
+    int rating = 5;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Nieuwe beoordeling'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownButton<int>(
+              value: rating,
+              items: List.generate(
+                5,
+                (i) => DropdownMenuItem(
+                  value: i + 1,
+                  child: Text('${i + 1} sterren'),
+                ),
+              ),
+              onChanged: (v) => rating = v!,
+            ),
+            TextField(
+              controller: commentController,
+              maxLines: 3,
+              decoration:
+                  const InputDecoration(hintText: 'Jouw ervaring'),
             ),
           ],
         ),
-        const SizedBox(height: 4),
-        Row(
-          children: List.generate(5, (index) {
-            return Icon(
-              Icons.star,
-              size: 14,
-              color: index < 4 ? Colors.amber : Colors.grey[300],
-            );
-          }),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          reviewText,
-          style: Theme.of(context).textTheme.bodySmall,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annuleren'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<ReviewsService>().addReview(
+                    carId,
+                    ReviewModel(
+                      author: 'Gebruiker',
+                      comment: commentController.text,
+                      rating: rating,
+                      date: DateTime.now(),
+                    ),
+                  );
+              Navigator.pop(context);
+            },
+            child: const Text('Opslaan'),
+          ),
+        ],
+      ),
     );
   }
 }
