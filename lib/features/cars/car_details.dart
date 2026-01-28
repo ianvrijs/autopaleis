@@ -250,20 +250,6 @@ class CarDetails extends StatelessWidget {
               )),
 
         const SizedBox(height: 12),
-        
-        // Load More Button
-        if (!reviews.isEmpty)
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () {
-                // TODO: Load more reviews
-              },
-              child: Text(l10n.load_more_reviews),
-            ),
-          ),
-
-        const SizedBox(height: 12),
 
         // Write Review Button
         SizedBox(
